@@ -1,0 +1,3268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Java Loops, Methods &amp; Arrays</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f1e8; --surface:#fffdf8; --surface2:#f0ebdf; --ink:#1f1d18; --muted:#6c675b; --line:#e2dccd;
+  --code-bg:#1d1f25; --code-ink:#e6e3da; --code-line:#2b2e36; --code-num:#6a6f7c;
+  --ok:#1e8a4c; --ok-bg:#e3f4ea; --bad:#c23b2e; --bad-bg:#fbe7e4; --warn:#a86a00; --warn-bg:#fdf1d8;
+  --loops:#e0662a; --methods:#0f8b7d; --arrays:#6b4fd8; --arrays2d:#1f6fd1;
+  --accent:#e0662a; --accent-soft:color-mix(in srgb,var(--accent) 12%,transparent);
+  --radius:14px; --shadow:0 1px 0 rgba(0,0,0,.04),0 8px 24px -12px rgba(40,30,10,.18);
+  --font-head:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --font-body:"IBM Plex Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-mono:"JetBrains Mono",ui-monospace,"Cascadia Code",Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#14151a; --surface:#1c1e24; --surface2:#23262d; --ink:#ebe7dd; --muted:#9b968a; --line:#2e313a;
+    --ok:#4cc27e; --ok-bg:#16301f; --bad:#ff7a6b; --bad-bg:#3a1c19; --warn:#f0b445; --warn-bg:#36290f;
+    --shadow:0 1px 0 rgba(255,255,255,.03),0 10px 30px -14px rgba(0,0,0,.6);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#14151a; --surface:#1c1e24; --surface2:#23262d; --ink:#ebe7dd; --muted:#9b968a; --line:#2e313a;
+  --ok:#4cc27e; --ok-bg:#16301f; --bad:#ff7a6b; --bad-bg:#3a1c19; --warn:#f0b445; --warn-bg:#36290f;
+  --shadow:0 1px 0 rgba(255,255,255,.03),0 10px 30px -14px rgba(0,0,0,.6);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 var(--font-body);-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--font-head);line-height:1.15;margin:0 0 .5em;letter-spacing:-.01em}
+h2{font-size:1.75rem} h3{font-size:1.25rem;margin-top:1.6em} h4{font-size:1rem}
+p{margin:.4em 0 .9em}
+a{color:var(--accent)}
+code{font-family:var(--font-mono);font-size:.88em;background:var(--surface2);padding:.1em .38em;border-radius:6px}
+button{font:inherit;cursor:pointer}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+
+/* ---------- top bar ---------- */
+.topbar{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.topbar .wrap{display:flex;align-items:center;gap:12px;height:64px}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--font-head);font-weight:800;font-size:1.05rem;text-decoration:none;color:var(--ink);white-space:nowrap}
+.brand .logo{width:34px;height:34px;border-radius:10px;background:var(--ink);color:var(--bg);display:grid;place-items:center;font-family:var(--font-mono);font-size:.8rem}
+.tabs{display:flex;gap:4px;margin-left:auto;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tabs a{display:flex;align-items:center;gap:6px;padding:8px 12px;border-radius:999px;color:var(--muted);text-decoration:none;font-weight:600;font-size:.9rem;white-space:nowrap}
+.tabs a .dot{width:8px;height:8px;border-radius:50%;background:var(--c)}
+.tabs a:hover{color:var(--ink);background:var(--surface2)}
+.tabs a.active{color:var(--ink);background:var(--surface);box-shadow:var(--shadow)}
+.icon-btn{border:1px solid var(--line);background:var(--surface);color:var(--ink);width:38px;height:38px;border-radius:10px;display:grid;place-items:center;flex:none}
+
+/* ---------- home ---------- */
+.hero{padding:56px 0 24px}
+.hero .kicker{font-family:var(--font-mono);font-size:.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:.12em}
+.hero h1{font-size:clamp(2.2rem,5.5vw,4rem);font-weight:800;max-width:15ch;margin:.25em 0 .3em}
+.hero h1 em{font-style:normal;background:linear-gradient(90deg,var(--loops),var(--methods),var(--arrays),var(--arrays2d));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p.lead{font-size:1.15rem;color:var(--muted);max-width:60ch}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin:28px 0}
+.tcard{position:relative;display:flex;flex-direction:column;gap:8px;padding:22px;border-radius:var(--radius);background:var(--surface);border:1px solid var(--line);text-decoration:none;color:var(--ink);box-shadow:var(--shadow);transition:transform .15s,border-color .15s;overflow:hidden}
+.tcard:hover{transform:translateY(-3px);border-color:var(--c)}
+.tcard::before{content:"";position:absolute;inset:0 0 auto 0;height:5px;background:var(--c)}
+.tcard .num{font-family:var(--font-mono);color:var(--c);font-weight:600;font-size:.85rem}
+.tcard h3{margin:0;font-size:1.35rem}
+.tcard p{margin:0;color:var(--muted);font-size:.93rem}
+.tcard .prog{margin-top:auto;padding-top:10px;font-size:.82rem;color:var(--muted);display:flex;flex-direction:column;gap:6px}
+.bar{height:6px;border-radius:99px;background:var(--surface2);overflow:hidden}
+.bar>i{display:block;height:100%;width:0;background:var(--c,var(--accent));border-radius:99px;transition:width .4s}
+.legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin:8px 0 60px}
+.legend div{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:12px;background:var(--surface2);font-size:.9rem}
+.legend b{display:block;font-family:var(--font-head)}
+.legend .ic{font-size:1.3rem;line-height:1}
+
+/* ---------- topic layout ---------- */
+.topic{display:none;--accent-soft:color-mix(in srgb,var(--accent) 13%,transparent)}
+.topic.show{display:block}
+.topic-hero{padding:40px 0 20px;border-bottom:1px solid var(--line);margin-bottom:28px}
+.topic-hero .num{font-family:var(--font-mono);color:var(--accent);font-weight:600}
+.topic-hero h1{font-size:clamp(2rem,4.5vw,3.2rem);font-weight:800;margin:.15em 0 .2em}
+.topic-hero p{color:var(--muted);max-width:65ch;font-size:1.05rem;margin:0}
+.layout{display:grid;grid-template-columns:210px 1fr;gap:36px;align-items:start}
+.toc{position:sticky;top:84px;display:flex;flex-direction:column;gap:2px}
+.toc a{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;color:var(--muted);text-decoration:none;font-size:.92rem;font-weight:500}
+.toc a:hover{background:var(--surface2);color:var(--ink)}
+.toc a .ck{width:18px;height:18px;border-radius:50%;border:2px solid var(--line);flex:none;display:grid;place-items:center;font-size:.65rem;color:transparent}
+.toc a.done .ck{background:var(--accent);border-color:var(--accent);color:#fff}
+.toc a.here{color:var(--ink);background:var(--surface)}
+.toc .toc-prog{margin:12px 10px 0;font-size:.8rem;color:var(--muted)}
+.content{min-width:0}
+.block{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:28px;margin-bottom:24px;box-shadow:var(--shadow)}
+.block>h2{display:flex;align-items:center;gap:12px}
+.block>h2 .tag{font-family:var(--font-mono);font-size:.78rem;color:#fff;background:var(--accent);padding:4px 9px;border-radius:8px;letter-spacing:.04em}
+.sub{color:var(--muted);margin-top:-.3em}
+.objectives{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.objectives li{display:flex;gap:14px;align-items:flex-start;padding:12px 16px;background:var(--surface2);border-radius:12px}
+.objectives li::before{content:attr(data-n);font-family:var(--font-mono);font-weight:600;color:var(--accent);flex:none}
+.callout{border-left:4px solid var(--accent);background:var(--accent-soft);padding:12px 16px;border-radius:0 12px 12px 0;margin:14px 0}
+.callout.warn{border-color:var(--warn);background:var(--warn-bg)}
+.callout b:first-child{font-family:var(--font-head)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid2>*,.io>*{min-width:0}
+.pill{display:inline-block;font-family:var(--font-mono);font-size:.75rem;padding:2px 8px;border-radius:99px;background:var(--accent-soft);color:var(--accent);font-weight:600}
+table.simple{width:100%;border-collapse:collapse;font-size:.93rem;margin:10px 0}
+table.simple th,table.simple td{border-bottom:1px solid var(--line);padding:9px 10px;text-align:left;vertical-align:top}
+table.simple th{font-family:var(--font-head);background:var(--surface2)}
+.flip-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:12px 0}
+.flip{perspective:900px;height:150px;cursor:pointer}
+.flip .in{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d}
+.flip.on .in{transform:rotateY(180deg)}
+.flip .f,.flip .b{position:absolute;inset:0;backface-visibility:hidden;border-radius:12px;padding:14px;display:flex;flex-direction:column;justify-content:center;font-size:.92rem}
+.flip .f{background:var(--surface2);border:1px dashed var(--line)}
+.flip .f b{font-family:var(--font-head);font-size:1.05rem}
+.flip .f small{color:var(--muted);margin-top:6px}
+.flip .b{background:var(--accent);color:#fff;transform:rotateY(180deg);font-size:.98rem;line-height:1.5}
+.flip .b code{background:rgba(255,255,255,.2);color:#fff}
+
+/* ---------- code ---------- */
+.code{background:var(--code-bg);color:var(--code-ink);border-radius:12px;font:13.5px/1.6 var(--font-mono);overflow:auto;margin:0}
+.code .ln{display:flex;padding:0 14px 0 0;min-height:1.6em;white-space:pre}
+.code .ln:first-child{padding-top:12px}.code .ln:last-child{padding-bottom:12px}
+.code .num{width:42px;flex:none;text-align:right;padding-right:14px;color:var(--code-num);user-select:none}
+.code .ln.cur{background:color-mix(in srgb,var(--accent) 32%,transparent);box-shadow:inset 3px 0 0 var(--accent)}
+.code .ln.cur .num{color:#fff}
+.code .k{color:#ff9d6b}.code .s{color:#a8d977}.code .n{color:#d7a6ff}.code .c{color:#7d8494;font-style:italic}.code .t{color:#66d1e8}.code .f{color:#ffd479}
+.cbox{border-radius:12px;overflow:hidden;border:1px solid var(--line);margin:14px 0;background:var(--code-bg)}
+.cbox .bar-top{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#262931;color:#c9c5ba;font-size:.82rem}
+.cbox .bar-top .dots{display:flex;gap:5px}.cbox .bar-top .dots i{width:10px;height:10px;border-radius:50%;background:#555}
+.cbox .bar-top .dots i:nth-child(1){background:#ff6058}.cbox .bar-top .dots i:nth-child(2){background:#ffbd2e}.cbox .bar-top .dots i:nth-child(3){background:#28c941}
+.cbox .bar-top .ttl{flex:1;font-family:var(--font-mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cbox .code{border-radius:0}
+.mini-btn{border:1px solid #3a3e48;background:#2f333c;color:#e6e3da;border-radius:7px;padding:3px 10px;font-size:.78rem;font-family:var(--font-body)}
+.mini-btn:hover{background:#3a3f4a}
+.mini-btn.run{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+.console{display:none;border-top:1px solid #333742;background:#121318;color:#9ef0b0;font:13px/1.55 var(--font-mono);padding:10px 14px 12px;white-space:pre-wrap;min-height:2.6em}
+.console.show{display:block}
+.console::before{content:"OUTPUT";display:block;color:#6a6f7c;font-size:.7rem;letter-spacing:.12em;margin-bottom:4px}
+.predict-hint{font-size:.78rem;color:#9b968a;font-style:italic}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:8px 14px;border-radius:10px;font-weight:600;font-size:.9rem}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.ghost{background:transparent}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+
+/* ---------- tracer ---------- */
+.tracer{border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;margin:18px 0;background:var(--surface2)}
+.tr-head{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--surface)}
+.tr-head b{font-family:var(--font-head);font-size:1.05rem}
+.tr-count{font-family:var(--font-mono);font-size:.82rem;color:var(--muted);white-space:nowrap}
+.tr-predict{padding:12px 16px;border-bottom:1px solid var(--line);display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:.88rem}
+.tr-predict textarea{flex:1;min-width:200px;font:13px var(--font-mono);border:1px solid var(--line);border-radius:8px;padding:6px 8px;background:var(--surface);color:var(--ink);resize:vertical}
+.tr-body{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr)}
+.tr-body .code{border-radius:0;height:100%}
+.tr-side{padding:14px 16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.tr-side h4{margin:0;font-size:.78rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-family:var(--font-body)}
+.tr-note{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:8px;padding:10px 12px;font-size:.92rem;min-height:3.2em}
+.tr-vars{display:flex;flex-direction:column;gap:8px}
+.var{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-family:var(--font-mono);font-size:.86rem}
+.var .nm{color:var(--muted);min-width:56px}
+.var .vl{background:var(--surface);border:1px solid var(--line);border-radius:7px;padding:2px 9px;transition:background .3s}
+.var.chg .vl{background:var(--warn-bg);border-color:var(--warn)}
+.arr{display:flex;gap:3px;flex-wrap:wrap}
+.arr .cell{display:flex;flex-direction:column;align-items:center}
+.arr .cell span{min-width:36px;text-align:center;padding:3px 6px;background:var(--surface);border:1px solid var(--line);border-radius:6px}
+.arr .cell small{font-size:.66rem;color:var(--muted)}
+.arr .cell.hl span{background:var(--accent);border-color:var(--accent);color:#fff}
+.g2{border-collapse:separate;border-spacing:3px;font-family:var(--font-mono);font-size:.82rem}
+.g2 td{min-width:34px;text-align:center;padding:3px 6px;background:var(--surface);border:1px solid var(--line);border-radius:6px}
+.g2 th{font-weight:400;font-size:.66rem;color:var(--muted);padding:0 2px}
+.g2 td.hl{background:var(--accent);border-color:var(--accent);color:#fff}
+.g2 td.row-hl{background:var(--accent-soft)}
+.tr-out{margin:0;background:#121318;color:#9ef0b0;border-radius:8px;padding:10px 12px;font:13px/1.5 var(--font-mono);min-height:3em;white-space:pre-wrap;max-height:180px;overflow:auto}
+.tr-ctrl{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:12px 16px;border-top:1px solid var(--line);background:var(--surface)}
+.tr-ctrl input[type=range]{flex:1;min-width:120px;accent-color:var(--accent)}
+.tr-result{display:none;padding:12px 16px;border-top:1px solid var(--line);font-size:.92rem}
+.tr-result.show{display:block}
+.tr-result.ok{background:var(--ok-bg);color:var(--ok)}
+.tr-result.bad{background:var(--bad-bg);color:var(--bad)}
+.kbd-tip{font-size:.75rem;color:var(--muted);margin-left:auto}
+
+/* ---------- quiz ---------- */
+.quiz-head{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:14px}
+.quiz-score{font-family:var(--font-head);font-size:1.1rem}
+.quiz-head .bar{flex:1;min-width:160px}
+.q{border:1px solid var(--line);border-radius:12px;padding:18px;margin:12px 0;background:var(--surface)}
+.q .qn{font-family:var(--font-mono);font-size:.78rem;color:var(--accent);font-weight:600}
+.q .qt{font-weight:600;margin:4px 0 10px}
+.opts{display:grid;gap:8px}
+.opt{display:flex;gap:12px;align-items:center;text-align:left;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:10px 12px;font-size:.95rem;transition:border-color .15s,background .15s}
+.opt:hover:not(:disabled){border-color:var(--accent);background:var(--accent-soft)}
+.opt .L{font-family:var(--font-mono);font-weight:600;width:26px;height:26px;border-radius:7px;display:grid;place-items:center;background:var(--surface2);flex:none;font-size:.8rem}
+.opt:disabled{cursor:default}
+.opt.right{border-color:var(--ok);background:var(--ok-bg)}
+.opt.right .L{background:var(--ok);color:#fff}
+.opt.wrong{border-color:var(--bad);background:var(--bad-bg)}
+.opt.wrong .L{background:var(--bad);color:#fff}
+.opt.dim{opacity:.55}
+.fb{display:none;margin-top:10px;padding:10px 12px;border-radius:10px;font-size:.92rem}
+.fb.show{display:block}
+.fb.ok{background:var(--ok-bg);color:var(--ok)}
+.fb.bad{background:var(--bad-bg);color:var(--bad)}
+.fb span{color:var(--ink)}
+.quiz-done{display:none;text-align:center;padding:22px;border-radius:12px;background:var(--accent-soft);margin-top:14px}
+.quiz-done.show{display:block}
+.quiz-done .big{font-family:var(--font-head);font-size:2.4rem;font-weight:800;color:var(--accent)}
+.quick{margin:18px 0}
+.quick .q{border-style:dashed;background:var(--surface2)}
+.quick .q .qn::before{content:"⚡ "}
+
+/* ---------- paper ---------- */
+.paper-item,.ide-item{border:1px solid var(--line);border-radius:12px;padding:20px;margin:16px 0;background:var(--surface)}
+.item-head{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:6px}
+.item-head h3{margin:0;font-size:1.15rem}
+.lvl{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:3px 8px;border-radius:6px;background:var(--surface2);color:var(--muted)}
+.lvl.easy{background:var(--ok-bg);color:var(--ok)}.lvl.medium{background:var(--warn-bg);color:var(--warn)}.lvl.hard{background:var(--bad-bg);color:var(--bad)}
+.ttable-wrap{overflow-x:auto;margin:12px 0}
+table.ttable{border-collapse:collapse;font-family:var(--font-mono);font-size:.86rem;min-width:100%}
+table.ttable th{background:var(--surface2);font-family:var(--font-body);font-weight:600;font-size:.82rem;padding:8px 10px;border:1px solid var(--line);text-align:center;white-space:nowrap}
+table.ttable td{border:1px solid var(--line);padding:3px;text-align:center}
+table.ttable td.given{background:var(--surface2);padding:6px 10px;color:var(--muted)}
+table.ttable input{width:100%;min-width:64px;border:0;background:transparent;color:var(--ink);font:inherit;text-align:center;padding:6px 4px;border-radius:5px}
+table.ttable input:focus{outline:2px solid var(--accent)}
+table.ttable input.ok{background:var(--ok-bg);color:var(--ok);font-weight:600}
+table.ttable input.bad{background:var(--bad-bg);color:var(--bad)}
+.out-box{width:100%;font:13px/1.5 var(--font-mono);border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--surface2);color:var(--ink);resize:vertical}
+.out-box.ok{border-color:var(--ok);background:var(--ok-bg)}.out-box.bad{border-color:var(--bad);background:var(--bad-bg)}
+.lbl{font-size:.82rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin:14px 0 6px;display:block}
+.key{display:none;margin-top:8px;padding:10px 12px;border-radius:10px;background:var(--ok-bg);color:var(--ink);font-size:.92rem}
+.key.show{display:block}
+.key pre{margin:6px 0 0;font:13px/1.5 var(--font-mono);white-space:pre-wrap}
+.qa{margin:10px 0;padding:12px 14px;border-radius:10px;background:var(--surface2)}
+.qa .ask{font-weight:600}
+.status{font-size:.88rem;font-weight:600;margin-left:6px}
+.status.ok{color:var(--ok)}.status.bad{color:var(--bad)}
+
+/* ---------- IDE ---------- */
+.io{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.io pre{margin:0;background:#121318;color:#9ef0b0;border-radius:10px;padding:10px 12px;font:13px/1.5 var(--font-mono);white-space:pre-wrap}
+.io pre .in{color:#ffd479}
+.hints{margin-top:12px}
+.hint{display:none;margin:8px 0;padding:10px 12px;border-radius:10px;background:var(--warn-bg);font-size:.92rem}
+.hint.show{display:block}
+.hint b{color:var(--warn)}
+details.sol{margin-top:12px;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+details.sol summary{padding:10px 14px;cursor:pointer;font-weight:600;background:var(--surface2)}
+details.sol .cbox{margin:0;border:0;border-radius:0}
+.checklist{list-style:none;padding:0;margin:12px 0 0;display:grid;gap:6px}
+.checklist label{display:flex;gap:10px;align-items:center;font-size:.92rem;cursor:pointer}
+.checklist input{accent-color:var(--accent);width:17px;height:17px}
+
+/* ---------- labs ---------- */
+.lab{border:2px solid var(--accent);border-radius:var(--radius);padding:20px;margin:18px 0;background:linear-gradient(180deg,var(--accent-soft),transparent 60%)}
+.lab h3{margin-top:0;display:flex;align-items:center;gap:10px}
+.lab-controls{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;margin-bottom:14px}
+.lab-controls label{display:flex;flex-direction:column;gap:4px;font-size:.78rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.lab-controls select,.lab-controls input{font:14px var(--font-mono);padding:7px 9px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);min-width:72px}
+.lab-controls input[type=number]{width:84px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;min-height:36px}
+.chip{font-family:var(--font-mono);padding:4px 10px;border-radius:8px;background:var(--surface);border:1px solid var(--line);animation:pop .25s both}
+@keyframes pop{from{transform:scale(.6);opacity:0}to{transform:none;opacity:1}}
+.lab-stat{display:flex;gap:16px;flex-wrap:wrap;font-size:.9rem;margin-top:10px}
+.lab-stat b{font-family:var(--font-mono)}
+.alert{padding:10px 12px;border-radius:10px;background:var(--bad-bg);color:var(--bad);font-weight:600;margin-top:10px;display:none}
+.alert.show{display:block}
+.viz-cells{display:flex;gap:4px;flex-wrap:wrap;margin:10px 0}
+.viz-cell{display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer}
+.viz-cell .box{width:52px;height:52px;display:grid;place-items:center;border:2px solid var(--line);border-radius:10px;background:var(--surface);font:600 1rem var(--font-mono);transition:all .2s}
+.viz-cell .idx{font:12px var(--font-mono);color:var(--muted)}
+.viz-cell .mon{font-size:.7rem;color:var(--muted)}
+.viz-cell.sel .box{border-color:var(--accent);background:var(--accent);color:#fff;transform:translateY(-4px)}
+.expr{font:15px var(--font-mono);padding:10px 14px;background:var(--code-bg);color:var(--code-ink);border-radius:10px;display:inline-block;margin:6px 0}
+.expr .res{color:#a8d977}.expr .err{color:#ff7a6b}
+.gridviz{border-collapse:separate;border-spacing:5px;margin:8px 0}
+.gridviz td{width:58px;height:50px;text-align:center;font:600 1rem var(--font-mono);background:var(--surface);border:2px solid var(--line);border-radius:10px;cursor:pointer;transition:all .2s}
+.gridviz th{font:12px var(--font-mono);color:var(--muted);font-weight:400;padding:0 4px}
+.gridviz th.rowh{cursor:pointer;text-decoration:underline dotted}
+.gridviz td.sel{background:var(--accent);border-color:var(--accent);color:#fff;transform:scale(1.06)}
+.gridviz td.row{background:var(--accent-soft);border-color:var(--accent)}
+.gridviz td.visited{background:var(--accent-soft)}
+.anat{font:clamp(13px,2.2vw,17px)/2.2 var(--font-mono);background:var(--code-bg);color:var(--code-ink);padding:16px;border-radius:12px;overflow-x:auto;white-space:nowrap}
+.anat button{font:inherit;background:transparent;color:inherit;border:0;border-bottom:2px dashed #6a6f7c;padding:0 2px;margin:0 1px;border-radius:4px}
+.anat button:hover,.anat button.on{background:var(--accent);color:#fff;border-color:transparent}
+.anat-exp{min-height:3.5em;margin-top:10px;padding:12px 14px;border-radius:10px;background:var(--surface2);font-size:.95rem}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:10px}
+.seg button{border:0;background:var(--surface);color:var(--muted);padding:8px 14px;font-weight:600;font-size:.88rem}
+.seg button.on{background:var(--accent);color:#fff}
+.pager{display:flex;justify-content:space-between;gap:12px;margin:28px 0 60px}
+.pager a{flex:1;padding:16px 18px;border:1px solid var(--line);border-radius:12px;text-decoration:none;color:var(--ink);background:var(--surface)}
+.pager a:hover{border-color:var(--accent)}
+.pager small{display:block;color:var(--muted)}
+.pager a.next{text-align:right}
+footer{border-top:1px solid var(--line);padding:24px 0 40px;color:var(--muted);font-size:.85rem}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;font-size:.9rem;transition:transform .25s;z-index:100}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr}
+  .toc{position:sticky;top:64px;z-index:20;flex-direction:row;overflow-x:auto;background:var(--bg);padding:8px 0;margin:0 -16px;padding-left:16px;scrollbar-width:none}
+  .toc::-webkit-scrollbar{display:none}
+  .toc a{white-space:nowrap;background:var(--surface);border:1px solid var(--line)}
+  .toc .toc-prog{display:none}
+  .tr-body{grid-template-columns:1fr}
+  .grid2,.io{grid-template-columns:1fr}
+  .block{padding:20px 16px}
+  .brand span.full{display:none}
+}
+@media (max-width:520px){.tabs a .dot{display:none}.tabs a{padding:6px 8px;font-size:.8rem}.kbd-tip{display:none}.brand .logo{width:30px;height:30px}}
+
+/* ---------- print (paper worksheet) ---------- */
+@media print{
+  :root{--bg:#fff;--surface:#fff;--surface2:#f3f3f3;--ink:#000;--muted:#444;--line:#999}
+  body.print-paper .topbar,body.print-paper .toc,body.print-paper .topic-hero p,body.print-paper .block:not(.paper-block),body.print-paper .pager,body.print-paper footer,body.print-paper #home,body.print-paper .btn-row,body.print-paper .key,body.print-paper .no-print{display:none!important}
+  body.print-paper .layout{display:block}
+  body.print-paper .block{box-shadow:none;border:0;padding:0}
+  body.print-paper .paper-item{break-inside:avoid;border:1px solid #999}
+  body.print-paper table.ttable input{border-bottom:0;min-height:26px}
+  body.print-paper .out-box{min-height:90px;background:#fff}
+  .code{background:#fff!important;color:#000!important;border:1px solid #999}
+  .code .k,.code .s,.code .n,.code .c,.code .t,.code .f{color:#000!important}
+  .code .num{color:#777!important}
+}
+
+/* show <=, >=, != exactly as typed (no font ligatures) */
+*,*::before,*::after{font-variant-ligatures:none;font-feature-settings:"liga" 0,"calt" 0}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a href="#home" class="brand"><span class="logo">{ }</span><span class="full">Java Essentials</span></a>
+    <nav class="tabs" id="tabs">
+      <a href="#loops" style="--c:var(--loops)"><span class="dot"></span><span class="lbl">Loops</span></a>
+      <a href="#methods" style="--c:var(--methods)"><span class="dot"></span><span class="lbl">Methods</span></a>
+      <a href="#arrays" style="--c:var(--arrays)"><span class="dot"></span><span class="lbl">1D Arrays</span></a>
+      <a href="#arrays2d" style="--c:var(--arrays2d)"><span class="dot"></span><span class="lbl">2D Arrays</span></a>
+    </nav>
+    <button class="icon-btn" id="themeBtn" title="Toggle light/dark theme" aria-label="Toggle theme">🌓</button>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- ======================= HOME ======================= -->
+<section id="home" class="topic show">
+  <div class="hero">
+    <div class="kicker">Interactive learning module · Java programming</div>
+    <h1>Loops, Methods &amp; <em>Arrays</em> in Java</h1>
+    <p class="lead">Four lessons you can click, run, step through and test yourself on. Each lesson ends with a quiz, a paper-based tracing worksheet, and coding activities for your IDE.</p>
+  </div>
+  <div class="cards" id="homeCards">
+    <a class="tcard" href="#loops" style="--c:var(--loops)"><span class="num">LESSON 01</span><h3>Looping Statements</h3><p>while, do-while, for, break and continue. Make the computer repeat work for you.</p><div class="prog" data-prog="loops"></div></a>
+    <a class="tcard" href="#methods" style="--c:var(--methods)"><span class="num">LESSON 02</span><h3>Methods</h3><p>Parameters, arguments, return values, overloading and scope. Write code once, use it many times.</p><div class="prog" data-prog="methods"></div></a>
+    <a class="tcard" href="#arrays" style="--c:var(--arrays)"><span class="num">LESSON 03</span><h3>One-Dimensional Arrays</h3><p>Store many values under one name, walk through them with loops, find sums and maximums.</p><div class="prog" data-prog="arrays"></div></a>
+    <a class="tcard" href="#arrays2d" style="--c:var(--arrays2d)"><span class="num">LESSON 04</span><h3>Two-Dimensional Arrays</h3><p>Tables of rows and columns, nested for loops and nested for-each loops.</p><div class="prog" data-prog="arrays2d"></div></a>
+  </div>
+  <h3>What's inside every lesson</h3>
+  <div class="legend">
+    <div><span class="ic">🎯</span><span><b>Objectives</b>What you should be able to do by the end.</span></div>
+    <div><span class="ic">💬</span><span><b>Discussion &amp; examples</b>Short explanations with code you can run and copy.</span></div>
+    <div><span class="ic">🧪</span><span><b>Try-it lab</b>Change values and watch what the code does.</span></div>
+    <div><span class="ic">🔍</span><span><b>Code tracer</b>Step through a program line by line and watch the variables change.</span></div>
+    <div><span class="ic">✅</span><span><b>Quiz</b>Instant feedback with an explanation for every answer.</span></div>
+    <div><span class="ic">📝</span><span><b>Paper activity</b>Trace tables you can fill in on screen or print.</span></div>
+    <div><span class="ic">💻</span><span><b>IDE activity</b>Coding problems with sample I/O, hints and a solution.</span></div>
+  </div>
+</section>
+
+<!-- ======================= LOOPS ======================= -->
+<section id="loops" class="topic" data-topic="loops" style="--accent:var(--loops)">
+  <div class="topic-hero">
+    <div class="num">LESSON 01</div>
+    <h1>Looping Statements in Java</h1>
+    <p>A loop runs a block of code again and again while a condition is true. Loops save time, reduce errors and keep code readable.</p>
+  </div>
+  <div class="layout">
+    <nav class="toc"></nav>
+    <div class="content">
+
+      <section class="block" id="loops-obj" data-label="Objectives">
+        <h2><span class="tag">01</span>Objectives</h2>
+        <p class="sub">By the end of this lesson, you should be able to:</p>
+        <ol class="objectives">
+          <li data-n="1">Identify the looping statements used in Java.</li>
+          <li data-n="2">Discuss how each looping statement works.</li>
+          <li data-n="3">Demonstrate how looping statements work by tracing code.</li>
+          <li data-n="4">Apply looping statements in creating programs.</li>
+        </ol>
+      </section>
+
+      <section class="block" id="loops-disc" data-label="Discussion">
+        <h2><span class="tag">02</span>Discussion &amp; Examples</h2>
+
+        <h3 style="margin-top:0">What is a looping statement?</h3>
+        <p>A <b>loop</b> is a sequence of statements executed repeatedly, zero or more times, as long as a given condition is satisfied. Imagine printing the numbers 1 to 1,000. Without a loop that is 1,000 <code>println</code> statements. With a loop it is three lines.</p>
+        <div class="callout"><b>Every loop has 3 ingredients.</b> A starting value (<i>initialization</i>), a <i>condition</i> that decides whether to keep going, and an <i>update</i> that moves the loop toward stopping. Forget the update and you get an <b>infinite loop</b>.</div>
+
+        <p>Java has three loops. Tap each card:</p>
+        <div class="flip-row">
+          <div class="flip"><div class="in"><div class="f"><b>while</b><small>Tap to flip</small></div><div class="b"><span>Checks the condition <b>first</b>. May run <b>zero</b> times.</span></div></div></div>
+          <div class="flip"><div class="in"><div class="f"><b>do / while</b><small>Tap to flip</small></div><div class="b"><span>Runs the body <b>first</b>, then checks. Always runs <b>at least once</b>.</span></div></div></div>
+          <div class="flip"><div class="in"><div class="f"><b>for</b><small>Tap to flip</small></div><div class="b"><span>Best when you know <b>exactly how many times</b> to repeat.</span></div></div></div>
+        </div>
+
+        <h3>1. The while loop</h3>
+        <p>The <code>while</code> loop goes through a block of code as long as a specified condition is <b>true</b>.</p>
+        <div class="codeblock" data-title="Syntax"><script type="text/x-java">while (condition) {
+    // code block to be executed
+}</script></div>
+        <p>In this example, the code inside the loop runs over and over as long as <code>i</code> is less than 5:</p>
+        <div class="example" data-title="WhileDemo.java"><script type="text/x-java">int i = 0;
+while (i < 5) {
+    System.out.println(i);
+    i++;
+}</script><script type="text/x-output">0
+1
+2
+3
+4</script></div>
+        <div class="callout warn"><b>Watch out:</b> if you remove <code>i++</code>, <code>i</code> stays 0 forever, the condition is always true, and the program never ends.</div>
+
+        <h3>2. The do/while loop</h3>
+        <p>The <code>do/while</code> loop is a variant of the while loop. It executes the code block <b>once</b> before checking the condition, then repeats as long as the condition is true.</p>
+        <div class="codeblock" data-title="Syntax"><script type="text/x-java">do {
+    // code block to be executed
+} while (condition);</script></div>
+        <div class="example" data-title="DoWhileDemo.java"><script type="text/x-java">int i = 0;
+do {
+    System.out.println(i);
+    i++;
+} while (i < 5);</script><script type="text/x-output">0
+1
+2
+3
+4</script></div>
+        <p><b>Example 2:</b> display the even numbers from 1 to 10 using do/while.</p>
+        <div class="example" data-title="EvenDoWhile.java"><script type="text/x-java">int i = 2;
+do {
+    System.out.println(i);
+    i = i + 2;
+} while (i <= 10);</script><script type="text/x-output">2
+4
+6
+8
+10</script></div>
+        <div class="quick" data-q="loops1"></div>
+
+        <h3>3. The for loop</h3>
+        <p>When you know <b>exactly how many times</b> you want to loop, use a <code>for</code> loop. All three ingredients sit together in one line.</p>
+        <div class="codeblock" data-title="Syntax"><script type="text/x-java">for (statement 1; statement 2; statement 3) {
+    // code block to be executed
+}</script></div>
+        <table class="simple">
+          <tr><th>Part</th><th>Example</th><th>When it runs</th></tr>
+          <tr><td>Statement 1 (initialization)</td><td><code>int i = 0</code></td><td><b>Once</b>, before the loop starts</td></tr>
+          <tr><td>Statement 2 (condition)</td><td><code>i &lt; 5</code></td><td>Before <b>every</b> iteration. If false, the loop ends</td></tr>
+          <tr><td>Statement 3 (update)</td><td><code>i++</code></td><td>After <b>every</b> iteration of the body</td></tr>
+        </table>
+        <div class="example" data-title="ForDemo.java"><script type="text/x-java">for (int i = 0; i < 5; i++) {
+    System.out.println(i);
+}</script><script type="text/x-output">0
+1
+2
+3
+4</script></div>
+        <p>This one prints only the even values between 0 and 10, because statement 3 adds 2 each time:</p>
+        <div class="example" data-title="ForEven.java"><script type="text/x-java">for (int i = 0; i <= 10; i = i + 2) {
+    System.out.println(i);
+}</script><script type="text/x-output">0
+2
+4
+6
+8
+10</script></div>
+
+        <h3>4. break and continue</h3>
+        <div class="grid2">
+          <div class="callout"><b>break</b> jumps <b>out of the loop</b> completely. You have seen it in <code>switch</code>; it works in loops too.</div>
+          <div class="callout"><b>continue</b> skips the <b>rest of the current iteration</b> and moves on to the next one.</div>
+        </div>
+        <div class="grid2">
+          <div class="example" data-title="Break.java — stop at 4"><script type="text/x-java">for (int i = 0; i < 10; i++) {
+    if (i == 4) {
+        break;
+    }
+    System.out.println(i);
+}</script><script type="text/x-output">0
+1
+2
+3</script></div>
+          <div class="example" data-title="Continue.java — skip 4"><script type="text/x-java">for (int i = 0; i < 10; i++) {
+    if (i == 4) {
+        continue;
+    }
+    System.out.println(i);
+}</script><script type="text/x-output">0
+1
+2
+3
+5
+6
+7
+8
+9</script></div>
+        </div>
+        <p>break and continue also work in <code>while</code> loops. In a while loop with <code>continue</code>, remember to update the counter <b>before</b> <code>continue</code>, or the loop gets stuck.</p>
+        <div class="grid2">
+          <div class="example" data-title="WhileBreak.java"><script type="text/x-java">int i = 0;
+while (i < 10) {
+    System.out.println(i);
+    i++;
+    if (i == 4) {
+        break;
+    }
+}</script><script type="text/x-output">0
+1
+2
+3</script></div>
+          <div class="example" data-title="WhileContinue.java"><script type="text/x-java">int i = 0;
+while (i < 10) {
+    if (i == 4) {
+        i++;
+        continue;
+    }
+    System.out.println(i);
+    i++;
+}</script><script type="text/x-output">0
+1
+2
+3
+5
+6
+7
+8
+9</script></div>
+        </div>
+
+        <h3>Which loop should I use?</h3>
+        <table class="simple">
+          <tr><th>Situation</th><th>Best loop</th></tr>
+          <tr><td>You know the number of repetitions (print 1–100, process 10 scores)</td><td><code>for</code></td></tr>
+          <tr><td>You repeat until something happens, and it may not need to run at all (read until the user types 0)</td><td><code>while</code></td></tr>
+          <tr><td>The body must run at least once (show a menu, then ask "Again? y/n")</td><td><code>do/while</code></td></tr>
+        </table>
+        <div class="quick" data-q="loops2"></div>
+      </section>
+
+      <section class="block" id="loops-lab" data-label="Try-it Lab">
+        <h2><span class="tag">03</span>Try-it Lab: Loop Builder</h2>
+        <p class="sub">Change the parts of the loop and see the code and output update instantly. Can you make an infinite loop on purpose?</p>
+        <div class="lab" id="loopLab">
+          <div class="lab-controls">
+            <label>Loop type<select id="lab-type"><option value="for">for</option><option value="while">while</option><option value="do">do-while</option></select></label>
+            <label>Start (i =)<input type="number" id="lab-start" value="1"></label>
+            <label>Condition<select id="lab-op"><option>&lt;</option><option selected>&lt;=</option><option>&gt;</option><option>&gt;=</option><option>!=</option></select></label>
+            <label>Limit<input type="number" id="lab-limit" value="10"></label>
+            <label>Update<select id="lab-upd"><option value="i++">i++</option><option value="i--">i--</option><option value="i += 2">i += 2</option><option value="i -= 2">i -= 2</option><option value="i += 3">i += 3</option><option value="i *= 2">i *= 2</option></select></label>
+          </div>
+          <div class="codeblock" id="lab-code" data-title="LoopLab.java"></div>
+          <span class="lbl">Output</span>
+          <div class="chips" id="lab-out"></div>
+          <div class="alert" id="lab-alert"></div>
+          <div class="lab-stat"><span>Body executed: <b id="lab-n">0</b> time(s)</span><span>Value of i after the loop: <b id="lab-final">-</b></span></div>
+          <div class="btn-row">
+            <button class="btn" data-preset="1,<=,10,i++,for">1 to 10</button>
+            <button class="btn" data-preset="10,>=,1,i--,for">Countdown</button>
+            <button class="btn" data-preset="5,<,5,i++,while">while that never runs</button>
+            <button class="btn" data-preset="5,<,5,i++,do">do-while that runs once</button>
+            <button class="btn" data-preset="1,!=,10,i += 2,for">Infinite loop 😱</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="block" id="loops-trace" data-label="Code Tracer">
+        <h2><span class="tag">04</span>Code Tracer</h2>
+        <p class="sub">Type your predicted output, then press <b>Step ▶</b> to run one line at a time. The highlighted line is the one about to run.</p>
+        <div class="seg" data-tracers="loops">
+          <button class="on" data-t="loop-while">while</button><button data-t="loop-dowhile">do-while</button><button data-t="loop-break">for + break</button><button data-t="loop-continue">while + continue</button>
+        </div>
+        <div class="tracer-slot"></div>
+      </section>
+
+      <section class="block" id="loops-quiz" data-label="Quiz">
+        <h2><span class="tag">05</span>Quiz</h2>
+        <div class="quiz" data-topic="loops"></div>
+      </section>
+
+      <section class="block paper-block" id="loops-paper" data-label="Paper Activity">
+        <h2><span class="tag">06</span>Paper Activity: Code Tracing</h2>
+        <p class="sub">Trace each program by hand. Fill in the trace table here or print it and answer on paper. Show all values.</p>
+        <div class="btn-row no-print" style="margin-top:0"><button class="btn" data-print="loops">🖨 Print worksheet</button></div>
+        <div class="paper" data-topic="loops"></div>
+      </section>
+
+      <section class="block" id="loops-ide" data-label="IDE Activity">
+        <h2><span class="tag">07</span>IDE Activity: Coding Problems</h2>
+        <p class="sub">Open your IDE (NetBeans, IntelliJ, VS Code, or an online compiler). Try each problem before opening the hints. Open the solution only after your program runs.</p>
+        <div class="ide" data-topic="loops"></div>
+      </section>
+
+      <div class="pager"><a href="#home"><small>← Back</small>Home</a><a class="next" href="#methods"><small>Next lesson →</small>Methods in Java</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= METHODS ======================= -->
+<section id="methods" class="topic" data-topic="methods" style="--accent:var(--methods)">
+  <div class="topic-hero">
+    <div class="num">LESSON 02</div>
+    <h1>Methods in Java</h1>
+    <p>A method is a named block of code that runs only when it is called. Write it once, then call it as many times as you need.</p>
+  </div>
+  <div class="layout">
+    <nav class="toc"></nav>
+    <div class="content">
+
+      <section class="block" id="methods-obj" data-label="Objectives">
+        <h2><span class="tag">01</span>Objectives</h2>
+        <p class="sub">By the end of this lesson, you should be able to:</p>
+        <ol class="objectives">
+          <li data-n="1">Define method, parameters and arguments.</li>
+          <li data-n="2">Discuss how methods are used in writing programs in Java.</li>
+          <li data-n="3">Write a Java program implementing methods.</li>
+          <li data-n="4">Compare programs written in Java with and without methods.</li>
+        </ol>
+      </section>
+
+      <section class="block" id="methods-disc" data-label="Discussion">
+        <h2><span class="tag">02</span>Discussion &amp; Examples</h2>
+        <h3 style="margin-top:0">Opening problem</h3>
+        <p>Find the sum of the integers from 1 to 10, from 20 to 30, and from 35 to 45. Compare the two solutions:</p>
+        <div class="seg" id="wwSeg"><button class="on" data-v="without">Without a method</button><button data-v="with">With a method</button></div>
+        <div id="ww-without" class="example" data-title="NoMethod.java — the same logic written 3 times"><script type="text/x-java">int sum = 0;
+for (int i = 1; i <= 10; i++)
+    sum += i;
+System.out.println("Sum from 1 to 10 is " + sum);
+
+sum = 0;
+for (int i = 20; i <= 30; i++)
+    sum += i;
+System.out.println("Sum from 20 to 30 is " + sum);
+
+sum = 0;
+for (int i = 35; i <= 45; i++)
+    sum += i;
+System.out.println("Sum from 35 to 45 is " + sum);</script><script type="text/x-output">Sum from 1 to 10 is 55
+Sum from 20 to 30 is 275
+Sum from 35 to 45 is 440</script></div>
+        <div id="ww-with" class="example" data-title="WithMethod.java — write once, call 3 times" style="display:none"><script type="text/x-java">public static int sum(int i1, int i2) {
+    int sum = 0;
+    for (int i = i1; i <= i2; i++)
+        sum += i;
+    return sum;
+}
+
+public static void main(String[] args) {
+    System.out.println("Sum from 1 to 10 is " + sum(1, 10));
+    System.out.println("Sum from 20 to 30 is " + sum(20, 30));
+    System.out.println("Sum from 35 to 45 is " + sum(35, 45));
+}</script><script type="text/x-output">Sum from 1 to 10 is 55
+Sum from 20 to 30 is 275
+Sum from 35 to 45 is 440</script></div>
+        <div class="callout"><b>Same output, better code.</b> If the summing logic has a bug, the version without a method needs three fixes. The method version needs one.</div>
+
+        <h3>What is a method?</h3>
+        <ul>
+          <li>A method is a <b>block of code that only runs when it is called</b>.</li>
+          <li>It is a collection of statements grouped together to perform an operation.</li>
+          <li>You can pass data, called <b>parameters</b>, into a method.</li>
+          <li>Methods are also known as <b>functions</b>.</li>
+          <li><b>Why use methods?</b> To reuse code: define it once, use it many times.</li>
+        </ul>
+
+        <h3>Anatomy of a method</h3>
+        <p>Click each part of the method header to see what it means.</p>
+        <div class="anat" id="anat"><button data-a="public">public</button> <button data-a="static">static</button> <button data-a="type">int</button> <button data-a="name">sum</button>(<button data-a="params">int a, int b</button>) <button data-a="body">{ return a + b; }</button></div>
+        <div class="anat-exp" id="anatExp">👆 Click a highlighted part above.</div>
+
+        <h3>Creating and calling a method</h3>
+        <p>A method must be declared <b>inside a class</b>. Java already gives us methods like <code>System.out.println()</code>, but we can create our own. To call a method, write its name followed by parentheses and a semicolon. A method can be called many times.</p>
+        <div class="example" data-title="Main.java"><script type="text/x-java">public class Main {
+    static void myMethod() {
+        System.out.println("I just got executed!");
+    }
+
+    public static void main(String[] args) {
+        myMethod();
+        myMethod();
+        myMethod();
+    }
+}</script><script type="text/x-output">I just got executed!
+I just got executed!
+I just got executed!</script></div>
+        <table class="simple">
+          <tr><td><code>myMethod</code></td><td>the name of the method</td></tr>
+          <tr><td><code>static</code></td><td>the method belongs to the <code>Main</code> class, not to an object of the class</td></tr>
+          <tr><td><code>void</code></td><td>the method does not return a value</td></tr>
+        </table>
+
+        <h3>Parameters and arguments</h3>
+        <p>Information can be passed to methods as <b>parameters</b>. Parameters act as variables inside the method. They go inside the parentheses after the method name; separate several parameters with commas.</p>
+        <div class="example" data-title="Params.java"><script type="text/x-java">static void myMethod(String fname) {
+    System.out.println(fname + " Dela Cruz");
+}
+
+public static void main(String[] args) {
+    myMethod("Angela");
+    myMethod("Mark");
+    myMethod("Cristelle");
+}</script><script type="text/x-output">Angela Dela Cruz
+Mark Dela Cruz
+Cristelle Dela Cruz</script></div>
+        <div class="grid2">
+          <div class="callout"><b>Parameter</b>: the variable in the method <i>definition</i>. Here: <code>fname</code>.</div>
+          <div class="callout"><b>Argument</b>: the actual value <i>passed</i> when calling. Here: <code>"Angela"</code>, <code>"Mark"</code>, <code>"Cristelle"</code>.</div>
+        </div>
+        <p><b>Multiple parameters.</b> You can have as many as you like. The arguments must be in the same order and of matching types.</p>
+        <div class="example" data-title="MultiParams.java"><script type="text/x-java">static void myMethod(String fname, int age) {
+    System.out.println(fname + " is " + age);
+}
+
+public static void main(String[] args) {
+    myMethod("Angela", 19);
+    myMethod("Mark", 20);
+    myMethod("Cristelle", 18);
+}</script><script type="text/x-output">Angela is 19
+Mark is 20
+Cristelle is 18</script></div>
+        <div class="quick" data-q="methods1"></div>
+
+        <h3>Return values</h3>
+        <p><code>void</code> means the method returns nothing. To send a value back, replace <code>void</code> with a data type (<code>int</code>, <code>double</code>, <code>String</code>…) and use the <code>return</code> keyword.</p>
+        <div class="grid2">
+          <div class="example" data-title="Return.java"><script type="text/x-java">static int myMethod(int x, int y) {
+    return x + y;
+}
+
+public static void main(String[] args) {
+    System.out.println(myMethod(5, 3));
+}</script><script type="text/x-output">8</script></div>
+          <div class="example" data-title="StoreResult.java"><script type="text/x-java">static int myMethod(int x, int y) {
+    return x + y;
+}
+
+public static void main(String[] args) {
+    int z = myMethod(5, 3);  // store it
+    System.out.println(z);
+}</script><script type="text/x-output">8</script></div>
+        </div>
+        <p>Storing the result in a variable is recommended, because it is easier to read and maintain.</p>
+
+        <h3>A method with if...else</h3>
+        <div class="example" data-title="CheckAge.java"><script type="text/x-java">static void checkAge(int age) {
+    if (age < 18) {
+        System.out.println("Access denied - You are not old enough!");
+    } else {
+        System.out.println("Access granted - You are old enough!");
+    }
+}
+
+public static void main(String[] args) {
+    checkAge(20);
+    checkAge(15);
+}</script><script type="text/x-output">Access granted - You are old enough!
+Access denied - You are not old enough!</script></div>
+
+        <h3>Method overloading</h3>
+        <p>With <b>method overloading</b>, multiple methods can have the <b>same name</b> with <b>different parameters</b> (different number or types). Java picks the right version based on the arguments.</p>
+        <div class="grid2">
+          <div class="example" data-title="Without overloading"><script type="text/x-java">static int plusMethodInt(int x, int y) {
+    return x + y;
+}
+static double plusMethodDouble(double x, double y) {
+    return x + y;
+}
+public static void main(String[] args) {
+    int n1 = plusMethodInt(8, 5);
+    double n2 = plusMethodDouble(4.5, 6.25);
+    System.out.println("int: " + n1);
+    System.out.println("double: " + n2);
+}</script><script type="text/x-output">int: 13
+double: 10.75</script></div>
+          <div class="example" data-title="With overloading"><script type="text/x-java">static int plusMethod(int x, int y) {
+    return x + y;
+}
+static double plusMethod(double x, double y) {
+    return x + y;
+}
+public static void main(String[] args) {
+    int n1 = plusMethod(8, 5);
+    double n2 = plusMethod(4.5, 6.25);
+    System.out.println("int: " + n1);
+    System.out.println("double: " + n2);
+}</script><script type="text/x-output">int: 13
+double: 10.75</script></div>
+        </div>
+        <div class="callout warn"><b>Not overloading:</b> two methods that differ <b>only in return type</b>, like <code>int f(int x)</code> and <code>double f(int x)</code>. That is a compile error.</div>
+
+        <h3>Scope</h3>
+        <p>In Java, a variable is only accessible inside the region where it is created. This is called <b>scope</b>.</p>
+        <div class="grid2">
+          <div class="example" data-title="Method scope"><script type="text/x-java">public static void main(String[] args) {
+    // x cannot be used here yet
+    int x = 100;
+    // x can be used from here on
+    System.out.println(x);
+}</script><script type="text/x-output">100</script></div>
+          <div class="example" data-title="Block scope"><script type="text/x-java">public static void main(String[] args) {
+    // x cannot be used here
+    {
+        int x = 100;
+        System.out.println(x);  // OK
+    }
+    // x cannot be used here either
+}</script><script type="text/x-output">100</script></div>
+        </div>
+        <p>A block can be on its own or belong to an <code>if</code>, <code>while</code> or <code>for</code>. A variable declared in a <code>for</code> header (like <code>int i</code>) exists only inside that loop.</p>
+        <div class="quick" data-q="methods2"></div>
+
+        <h3>Putting it together: methods with user input</h3>
+        <div class="example" data-title="Calculator.java"><script type="text/x-java">import java.util.Scanner;
+
+public class Calculator {
+    static int add(int a, int b) {
+        return a + b;
+    }
+
+    static int subtract(int a, int b) {
+        return a - b;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter first number: ");
+        int x = sc.nextInt();
+        System.out.print("Enter second number: ");
+        int y = sc.nextInt();
+        System.out.println("Sum: " + add(x, y));
+        System.out.println("Difference: " + subtract(x, y));
+    }
+}</script><script type="text/x-output">Enter first number: 12
+Enter second number: 5
+Sum: 17
+Difference: 7</script></div>
+      </section>
+
+      <section class="block" id="methods-trace" data-label="Code Tracer">
+        <h2><span class="tag">03</span>Code Tracer</h2>
+        <p class="sub">Watch the <b>call stack</b>: when a method is called, Java jumps into it, runs it, and then returns to where it left off.</p>
+        <div class="seg" data-tracers="methods">
+          <button class="on" data-t="method-sum">Calling sum()</button><button data-t="method-overload">void, return &amp; overloading</button>
+        </div>
+        <div class="tracer-slot"></div>
+      </section>
+
+      <section class="block" id="methods-quiz" data-label="Quiz">
+        <h2><span class="tag">04</span>Quiz</h2>
+        <div class="quiz" data-topic="methods"></div>
+      </section>
+
+      <section class="block paper-block" id="methods-paper" data-label="Paper Activity">
+        <h2><span class="tag">05</span>Paper Activity: Code Tracing</h2>
+        <p class="sub">Follow every method call by hand. Write down which method is running and what it returns.</p>
+        <div class="btn-row no-print" style="margin-top:0"><button class="btn" data-print="methods">🖨 Print worksheet</button></div>
+        <div class="paper" data-topic="methods"></div>
+      </section>
+
+      <section class="block" id="methods-ide" data-label="IDE Activity">
+        <h2><span class="tag">06</span>IDE Activity: Coding Problems</h2>
+        <p class="sub">Write each program in your IDE. Every task needs at least one method besides <code>main</code>.</p>
+        <div class="ide" data-topic="methods"></div>
+      </section>
+
+      <div class="pager"><a href="#loops"><small>← Previous</small>Looping Statements</a><a class="next" href="#arrays"><small>Next lesson →</small>One-Dimensional Arrays</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 1D ARRAYS ======================= -->
+<section id="arrays" class="topic" data-topic="arrays" style="--accent:var(--arrays)">
+  <div class="topic-hero">
+    <div class="num">LESSON 03</div>
+    <h1>One-Dimensional Arrays</h1>
+    <p>An array stores a fixed-size, ordered collection of values of the same type under one name. Each value is reached by its index.</p>
+  </div>
+  <div class="layout">
+    <nav class="toc"></nav>
+    <div class="content">
+
+      <section class="block" id="arrays-obj" data-label="Objectives">
+        <h2><span class="tag">01</span>Objectives</h2>
+        <p class="sub">By the end of this lesson, you should be able to:</p>
+        <ol class="objectives">
+          <li data-n="1">Understand the fundamental concepts of arrays in Java.</li>
+          <li data-n="2">Apply different techniques for working with arrays effectively.</li>
+          <li data-n="3">Analyze and solve common programming problems using arrays.</li>
+        </ol>
+      </section>
+
+      <section class="block" id="arrays-disc" data-label="Discussion">
+        <h2><span class="tag">02</span>Discussion &amp; Examples</h2>
+        <h3 style="margin-top:0">Why arrays?</h3>
+        <p>Suppose you need the number of days in each month. Without arrays you would need 12 variables: <code>jan</code>, <code>feb</code>, <code>mar</code>… With an array, one name holds all 12 values.</p>
+        <p>An array is a <b>group of like-typed variables referred to by a common name</b>. Think of it as a row of numbered lockers: the locker number is the <b>index</b> and what is inside is the <b>element</b>.</p>
+        <div class="callout"><b>Indexes start at 0.</b> An array with 12 elements has indexes 0 to 11. The last index is always <code>length - 1</code>.</div>
+
+        <h3>Declaring array variables</h3>
+        <div class="codeblock" data-title="Syntax"><script type="text/x-java">dataType[] arrayRefVar;   // preferred way
+dataType arrayRefVar[];   // works, but not preferred
+
+double[] myList;          // example</script></div>
+
+        <h3>Creating an array</h3>
+        <p>Declaring only makes the variable. To create the actual array, use <code>new</code> with a size. The elements start with a <b>default value</b>: <code>0</code> for numbers, <code>false</code> for boolean, <code>null</code> for String.</p>
+        <div class="codeblock" data-title="Syntax"><script type="text/x-java">arrayVar = new type[size];
+
+int month_days[];
+month_days = new int[12];       // 12 ints, all 0
+
+int[] scores = new int[5];      // declare and create in one line</script></div>
+
+        <h3>Storing and reading values</h3>
+        <div class="example" data-title="MonthDays.java"><script type="text/x-java">int month_days[] = new int[12];
+month_days[0] = 31;
+month_days[1] = 28;
+month_days[2] = 31;
+month_days[3] = 30;
+month_days[4] = 31;
+month_days[5] = 30;
+month_days[6] = 31;
+month_days[7] = 31;
+month_days[8] = 30;
+month_days[9] = 31;
+month_days[10] = 30;
+month_days[11] = 31;
+System.out.println("April has " + month_days[3] + " days.");</script><script type="text/x-output">April has 30 days.</script></div>
+        <p>An <b>array initializer</b> does the same thing in one line. Java counts the values and sets the size for you:</p>
+        <div class="example" data-title="AutoArray.java"><script type="text/x-java">class AutoArray {
+    public static void main(String args[]) {
+        int month_days[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+        System.out.println("April has " + month_days[3] + " days.");
+    }
+}</script><script type="text/x-output">April has 30 days.</script></div>
+
+        <div class="lab" id="arrLab">
+          <h3>🧪 Try-it: Array explorer</h3>
+          <p style="margin-top:0">Click a box or move the slider to read <code>month_days[index]</code>. Try an index outside 0–11.</p>
+          <div class="viz-cells" id="arrCells"></div>
+          <div class="lab-controls">
+            <label>Index<input type="range" id="arrIdx" min="-1" max="12" value="3" style="width:220px;accent-color:var(--accent)"></label>
+            <label>New value<input type="number" id="arrVal" value="29"></label>
+            <button class="btn primary" id="arrSet">Assign month_days[i] = value</button>
+            <button class="btn" id="arrReset">Reset</button>
+          </div>
+          <div class="expr" id="arrExpr"></div>
+          <div style="font-size:.9rem;color:var(--muted)"><code>month_days.length</code> = 12 · first index = 0 · last index = 11</div>
+        </div>
+
+        <h3>Processing arrays with loops</h3>
+        <p>Arrays and <code>for</code> loops go together. Use <code>array.length</code> instead of a hard-coded number so the loop still works if the array size changes.</p>
+        <div class="example" data-title="ArrayOps.java — print, total, and largest"><script type="text/x-java">double[] myList = {1.9, 2.9, 3.4, 3.5};
+
+// Print all the array elements
+for (int i = 0; i < myList.length; i++) {
+    System.out.println(myList[i] + " ");
+}
+
+// Summing all elements
+double total = 0;
+for (int i = 0; i < myList.length; i++) {
+    total += myList[i];
+}
+System.out.println("Total is " + total);
+
+// Finding the largest element
+double max = myList[0];
+for (int i = 1; i < myList.length; i++) {
+    if (myList[i] > max)
+        max = myList[i];
+}
+System.out.println("Max is " + max);</script><script type="text/x-output">1.9
+2.9
+3.4
+3.5
+Total is 11.7
+Max is 3.5</script></div>
+        <div class="example" data-title="Average.java"><script type="text/x-java">double nums[] = {10.5, 11.0, 12.5, 13.0, 14.0};
+double result = 0;
+for (int i = 0; i < nums.length; i++) {
+    result = result + nums[i];
+}
+System.out.println("Average is " + result / nums.length);</script><script type="text/x-output">Average is 12.2</script></div>
+        <div class="quick" data-q="arrays1"></div>
+
+        <h3>The enhanced for loop (for-each)</h3>
+        <p>When you only need to <b>read</b> every element and don't need the index, the for-each loop is shorter: "for each <code>num</code> in <code>array</code>".</p>
+        <div class="example" data-title="SumDemo.java"><script type="text/x-java">import java.util.Scanner;
+
+class SumDemo {
+    public static void main(String args[]) {
+        Scanner scanner = new Scanner(System.in);
+        int[] array = new int[5];
+        int sum = 0;
+        System.out.println("Enter the elements:");
+        for (int i = 0; i < 5; i++) {
+            array[i] = scanner.nextInt();
+        }
+        for (int num : array) {
+            sum = sum + num;
+        }
+        System.out.println("Sum of array elements is: " + sum);
+    }
+}</script><script type="text/x-output">Enter the elements:
+4 8 15 16 23
+Sum of array elements is: 66</script></div>
+        <div class="callout warn"><b>Common error:</b> <code>ArrayIndexOutOfBoundsException</code> happens when you use an index &lt; 0 or >= length, for example <code>i &lt;= arr.length</code> instead of <code>i &lt; arr.length</code>.</div>
+      </section>
+
+      <section class="block" id="arrays-trace" data-label="Code Tracer">
+        <h2><span class="tag">03</span>Code Tracer</h2>
+        <p class="sub">The highlighted box shows which element the current line touches.</p>
+        <div class="seg" data-tracers="arrays">
+          <button class="on" data-t="arr-add10">Add 10 to each</button><button data-t="arr-max">Find the max</button>
+        </div>
+        <div class="tracer-slot"></div>
+      </section>
+
+      <section class="block" id="arrays-quiz" data-label="Quiz">
+        <h2><span class="tag">04</span>Quiz</h2>
+        <div class="quiz" data-topic="arrays"></div>
+      </section>
+
+      <section class="block paper-block" id="arrays-paper" data-label="Paper Activity">
+        <h2><span class="tag">05</span>Paper Activity: Code Tracing</h2>
+        <p class="sub">Trace on a clean short bond paper or fill in the tables below. Write the whole array after every change.</p>
+        <div class="btn-row no-print" style="margin-top:0"><button class="btn" data-print="arrays">🖨 Print worksheet</button></div>
+        <div class="paper" data-topic="arrays"></div>
+      </section>
+
+      <section class="block" id="arrays-ide" data-label="IDE Activity">
+        <h2><span class="tag">06</span>IDE Activity: Coding Problems</h2>
+        <p class="sub">Use arrays and loops. Use <code>.length</code> in your loop conditions.</p>
+        <div class="ide" data-topic="arrays"></div>
+      </section>
+
+      <div class="pager"><a href="#methods"><small>← Previous</small>Methods in Java</a><a class="next" href="#arrays2d"><small>Next lesson →</small>Two-Dimensional Arrays</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 2D ARRAYS ======================= -->
+<section id="arrays2d" class="topic" data-topic="arrays2d" style="--accent:var(--arrays2d)">
+  <div class="topic-hero">
+    <div class="num">LESSON 04</div>
+    <h1>Multi-Dimensional (2D) Arrays</h1>
+    <p>A 2D array is an array of arrays. It looks like a table with rows and columns: a class record, a seat plan, a game board.</p>
+  </div>
+  <div class="layout">
+    <nav class="toc"></nav>
+    <div class="content">
+
+      <section class="block" id="arrays2d-obj" data-label="Objectives">
+        <h2><span class="tag">01</span>Objectives</h2>
+        <p class="sub">By the end of this lesson, you should be able to:</p>
+        <ol class="objectives">
+          <li data-n="1">Understand the concept of a multi-dimensional array.</li>
+          <li data-n="2">Declare and initialize a multi-dimensional array.</li>
+          <li data-n="3">Write a Java program implementing a multi-dimensional array.</li>
+          <li data-n="4">Use nested for loops and nested for-each loops to access the elements of a 2D array.</li>
+        </ol>
+      </section>
+
+      <section class="block" id="arrays2d-disc" data-label="Discussion">
+        <h2><span class="tag">02</span>Discussion &amp; Examples</h2>
+        <h3 style="margin-top:0">What is a 2D array?</h3>
+        <ul>
+          <li>An <b>array of arrays</b>. It basically looks like a table with rows and columns.</li>
+          <li>It can only store <b>one data type</b> at a time.</li>
+          <li>It is useful when you want to store data in tabular form, like a table of student grades.</li>
+        </ul>
+
+        <h3>Syntax</h3>
+        <div class="codeblock" data-title="Syntax"><script type="text/x-java">dataType[][] arrayName;                                // declare
+dataType[][] arrayName = new dataType[rows][cols];     // declare and create
+
+int[][] scores = new int[3][4];      // 3 rows, 4 columns, all 0
+
+// declare and initialize: each row in its own curly braces
+int[][] myNumbers = { {1, 2, 3, 4}, {5, 6, 7} };</script></div>
+
+        <h3>Accessing and assigning elements</h3>
+        <p>To access an element, give <b>two indexes</b>: the first picks the <b>row</b> (which inner array), the second picks the <b>column</b> (which element inside that array).</p>
+        <div class="grid2">
+          <div class="example" data-title="Access.java"><script type="text/x-java">int[][] myNumbers = { {1, 2, 3, 4}, {5, 6, 7} };
+System.out.println(myNumbers[1][2]);</script><script type="text/x-output">7</script></div>
+          <div class="example" data-title="Assign.java"><script type="text/x-java">int[][] myNumbers = { {1, 2, 3, 4}, {5, 6, 7} };
+myNumbers[1][2] = 9;   // identifier[row][col] = value;
+System.out.println(myNumbers[1][2]);</script><script type="text/x-output">9</script></div>
+        </div>
+
+        <div class="lab" id="gridLab">
+          <h3>🧪 Try-it: Grid explorer</h3>
+          <p style="margin-top:0"><code>int[][] scores</code> holds 3 students (rows) × 4 quizzes (columns). Click a cell, click a row label, or animate the nested loop.</p>
+          <div style="overflow-x:auto"><table class="gridviz" id="gridTbl"></table></div>
+          <div class="expr" id="gridExpr">Click a cell…</div>
+          <div class="lab-controls" style="margin-top:10px">
+            <button class="btn primary" id="gridPlay">▶ Animate nested for loop</button>
+            <label>Order<select id="gridOrder"><option value="row">Row by row (row outer)</option><option value="col">Column by column (col outer)</option></select></label>
+            <label>Speed<select id="gridSpeed"><option value="900">Slow</option><option value="450" selected>Normal</option><option value="150">Fast</option></select></label>
+          </div>
+          <div class="lab-stat"><span><code>scores.length</code> = <b>3</b> (rows)</span><span><code>scores[0].length</code> = <b>4</b> (columns)</span><span>Running sum: <b id="gridSum">0</b></span></div>
+        </div>
+
+        <h3>Nested for loop</h3>
+        <p>A nested for loop is a for loop inside another for loop. The <b>outer loop</b> walks the rows; for each row, the <b>inner loop</b> walks all the columns. The inner loop finishes completely before the outer loop moves on.</p>
+        <div class="codeblock" data-title="Pattern for iterating a 2D array"><script type="text/x-java">for (int row = 0; row < identifier.length; row++) {
+    for (int col = 0; col < identifier[row].length; col++) {
+        System.out.println(identifier[row][col]);
+    }
+}</script></div>
+        <div class="example" data-title="Iterate2D.java"><script type="text/x-java">int[][] myNumbers = { {1, 2, 3, 4}, {5, 6, 7} };
+for (int row = 0; row < myNumbers.length; row++) {
+    for (int col = 0; col < myNumbers[row].length; col++) {
+        System.out.print(myNumbers[row][col] + " ");
+    }
+    System.out.println();   // new line after each row
+}</script><script type="text/x-output">1 2 3 4
+5 6 7 </script></div>
+        <div class="callout"><b>Note:</b> <code>myNumbers.length</code> is the number of <b>rows</b> (2). <code>myNumbers[row].length</code> is the number of <b>columns in that row</b> (4, then 3). Rows can have different lengths. If your array has a fixed, known size you can use numbers instead, but <code>.length</code> is safer.</div>
+        <div class="quick" data-q="arrays2d1"></div>
+
+        <h3>For-each loop</h3>
+        <p>The for-each loop iterates through a collection without needing to know its size.</p>
+        <div class="codeblock" data-title="Syntax"><script type="text/x-java">for (dataType identifier : collection) {
+    // code to do
+}</script></div>
+        <div class="example" data-title="ForEach1D.java"><script type="text/x-java">String[] cars = {"Volvo", "BMW", "Ford", "Mazda"};
+for (String car : cars) {
+    System.out.println(car);
+}</script><script type="text/x-output">Volvo
+BMW
+Ford
+Mazda</script></div>
+        <h3>Nested for-each for a 2D array</h3>
+        <p>The outer variable holds <b>one whole row</b> (an array). The inner variable holds <b>each value</b> in that row.</p>
+        <div class="codeblock" data-title="Syntax"><script type="text/x-java">for (String[] rowVar : arrayIdentifier) {   // holds each row (an array)
+    for (String value : rowVar) {           // holds each value in that row
+        // use value
+    }
+}</script></div>
+        <div class="example" data-title="SeatPlan.java"><script type="text/x-java">String[][] seats = { {"Ana", "Ben", "Cris"},
+                     {"Dan", "Eli", "Fe"} };
+for (String[] row : seats) {
+    for (String name : row) {
+        System.out.print(name + "\t");
+    }
+    System.out.println();
+}</script><script type="text/x-output">Ana	Ben	Cris
+Dan	Eli	Fe	</script></div>
+        <div class="quick" data-q="arrays2d2"></div>
+      </section>
+
+      <section class="block" id="arrays2d-trace" data-label="Code Tracer">
+        <h2><span class="tag">03</span>Code Tracer</h2>
+        <p class="sub">Notice that the inner loop runs to completion for every single pass of the outer loop.</p>
+        <div class="seg" data-tracers="arrays2d">
+          <button class="on" data-t="g-sum">Sum with nested for</button><button data-t="g-foreach">Nested for-each</button>
+        </div>
+        <div class="tracer-slot"></div>
+      </section>
+
+      <section class="block" id="arrays2d-quiz" data-label="Quiz">
+        <h2><span class="tag">04</span>Quiz</h2>
+        <div class="quiz" data-topic="arrays2d"></div>
+      </section>
+
+      <section class="block paper-block" id="arrays2d-paper" data-label="Paper Activity">
+        <h2><span class="tag">05</span>Paper Activity: Code Tracing</h2>
+        <p class="sub">Draw the table and fill it in as the loops run. Keep track of both <code>r</code> and <code>c</code>.</p>
+        <div class="btn-row no-print" style="margin-top:0"><button class="btn" data-print="arrays2d">🖨 Print worksheet</button></div>
+        <div class="paper" data-topic="arrays2d"></div>
+      </section>
+
+      <section class="block" id="arrays2d-ide" data-label="IDE Activity">
+        <h2><span class="tag">06</span>IDE Activity: Coding Problems</h2>
+        <p class="sub">Use nested loops for every problem. Bonus: put the work in methods (Lesson 2).</p>
+        <div class="ide" data-topic="arrays2d"></div>
+      </section>
+
+      <div class="pager"><a href="#arrays"><small>← Previous</small>One-Dimensional Arrays</a><a class="next" href="#home"><small>Finished! →</small>Back to Home</a></div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer><div class="wrap">References: lesson slides on Looping Statements, Methods, Arrays and 2D Arrays; W3Schools Java Tutorial (w3schools.com/java). Progress and quiz scores are saved in this browser only.</div></footer>
+<div class="toast" id="toast"></div>
+
+<script>
+/* =========================================================
+   DATA: tracers, quizzes, paper activities, IDE activities
+   ========================================================= */
+const J = String.raw;
+const fmtD = x => Number.isInteger(x) ? x.toFixed(1) : String(+x.toFixed(10));
+
+const TRACES = {
+/* ---------------- LOOPS ---------------- */
+'loop-while': { title:'while loop: print 0 to 4', code:J`
+int i = 0;
+while (i < 5) {
+    System.out.println(i);
+    i++;
+}
+System.out.println("Done!");`,
+ *gen(io){
+   let i=0; yield [1,{i},'Create variable <b>i</b> and set it to 0.'];
+   while(true){
+     const ok=i<5;
+     yield [2,{i},`Check the condition: <code>${i} &lt; 5</code> is <b>${ok}</b>. ${ok?'Run the loop body.':'Skip the body and exit the loop.'}`];
+     if(!ok)break;
+     io.println(i); yield [3,{i},`Print the value of i: <b>${i}</b>.`];
+     i++; yield [4,{i},`<code>i++</code> adds 1. i is now <b>${i}</b>. Go back up to the condition.`];
+   }
+   io.println('Done!'); yield [6,{i},'After the loop, print "Done!". The body ran 5 times; i stopped at 5 because 5 &lt; 5 is false.'];
+ }},
+'loop-dowhile': { title:'do-while: the body runs before the check', code:J`
+int i = 10;
+do {
+    System.out.println(i);
+    i++;
+} while (i < 5);
+System.out.println("Done!");`,
+ *gen(io){
+   let i=10; yield [1,{i},'i starts at 10. Notice that 10 &lt; 5 is already false…'];
+   while(true){
+     yield [2,{i},'Enter the <b>do</b> block. No condition is checked before the first run!'];
+     io.println(i); yield [3,{i},`Print <b>${i}</b>.`];
+     i++; yield [4,{i},`i++ → i is now <b>${i}</b>.`];
+     const ok=i<5; yield [5,{i},`Now check: <code>${i} &lt; 5</code> is <b>${ok}</b>. ${ok?'Repeat.':'Stop looping.'}`];
+     if(!ok)break;
+   }
+   io.println('Done!'); yield [6,{i},'The body ran <b>once</b> even though the condition was false from the start. A while loop here would print nothing but "Done!".'];
+ }},
+'loop-break': { title:'for loop with break', code:J`
+for (int i = 0; i < 10; i++) {
+    if (i == 4) {
+        break;
+    }
+    System.out.println(i);
+}
+System.out.println("Done!");`,
+ *gen(io){
+   let i=0; yield [1,{i},'Statement 1 runs <b>once</b>: <code>int i = 0</code>.'];
+   while(true){
+     const ok=i<10; yield [1,{i},`Statement 2 (condition): <code>${i} &lt; 10</code> is <b>${ok}</b>.`];
+     if(!ok)break;
+     yield [2,{i},`Is <code>${i} == 4</code>? <b>${i==4}</b>.`];
+     if(i==4){ yield [3,{i},'<b>break!</b> Jump out of the loop right now. The remaining iterations never happen.']; break; }
+     io.println(i); yield [5,{i},`Print <b>${i}</b>.`];
+     i++; yield [1,{i},`Statement 3 (update): <code>i++</code> → i is now <b>${i}</b>.`];
+   }
+   io.println('Done!'); yield [7,{},'Print "Done!". (i no longer exists here because it was declared inside the for header.)'];
+ }},
+'loop-continue': { title:'while loop with continue (skips 4)', code:J`
+int i = 0;
+while (i < 7) {
+    if (i == 4) {
+        i++;
+        continue;
+    }
+    System.out.println(i);
+    i++;
+}`,
+ *gen(io){
+   let i=0; yield [1,{i},'i starts at 0.'];
+   while(true){
+     const ok=i<7; yield [2,{i},`Check <code>${i} &lt; 7</code>: <b>${ok}</b>.`];
+     if(!ok)break;
+     yield [3,{i},`Is <code>${i} == 4</code>? <b>${i==4}</b>.`];
+     if(i==4){ i++; yield [4,{i},`Increase i to <b>${i}</b> <i>before</i> continuing. Without this line the loop would be stuck at 4 forever!`]; yield [5,{i},'<b>continue</b>: skip the rest of the body and go back to the condition. 4 is never printed.']; continue; }
+     io.println(i); yield [7,{i},`Print <b>${i}</b>.`];
+     i++; yield [8,{i},`i++ → <b>${i}</b>.`];
+   }
+   yield [9,{i},'Loop ended. Output skipped 4.'];
+ }},
+
+/* ---------------- METHODS ---------------- */
+'method-sum': { title:'Calling a method that returns a value', code:J`
+public class Main {
+    static int sum(int a, int b) {
+        int total = 0;
+        for (int i = a; i <= b; i++) {
+            total += i;
+        }
+        return total;
+    }
+
+    public static void main(String[] args) {
+        int x = sum(1, 3);
+        System.out.println("Sum 1-3: " + x);
+        System.out.println("Sum 4-5: " + sum(4, 5));
+    }
+}`,
+ *gen(io){
+   function* sumGen(a,b){
+     const st=`main() ▸ sum(${a}, ${b})`;
+     yield [2,{'call stack':st,a,b},`Jump into <b>sum</b>. The arguments are copied into the parameters: a = ${a}, b = ${b}.`];
+     let total=0; yield [3,{'call stack':st,a,b,total},'Create local variable total = 0.'];
+     let i=a;
+     while(true){
+       const ok=i<=b; yield [4,{'call stack':st,a,b,total,i},`Check <code>${i} &lt;= ${b}</code>: <b>${ok}</b>.`];
+       if(!ok)break;
+       total+=i; yield [5,{'call stack':st,a,b,total,i},`total += ${i} → total is <b>${total}</b>.`];
+       i++;
+     }
+     yield [7,{'call stack':st,a,b,total},`<b>return ${total}</b>. sum() ends, its variables disappear, and ${total} goes back to the caller.`];
+     return total;
+   }
+   yield [10,{'call stack':'main()'},'The program always starts in <b>main</b>.'];
+   yield [11,{'call stack':'main()'},'Calling <code>sum(1, 3)</code>. main pauses here and waits for the answer.'];
+   const x = yield* sumGen(1,3);
+   yield [11,{'call stack':'main()',x},`Back in main. The returned value is stored: x = <b>${x}</b>.`];
+   io.println('Sum 1-3: '+x); yield [12,{'call stack':'main()',x},'Print the result.'];
+   yield [13,{'call stack':'main()',x},'This println calls <code>sum(4, 5)</code> first. The method is reused!'];
+   const y = yield* sumGen(4,5);
+   io.println('Sum 4-5: '+y); yield [13,{'call stack':'main()',x},`Back in main: the returned ${y} is printed directly without storing it.`];
+   yield [14,{},'main() ends. Program finished.'];
+ }},
+'method-overload': { title:'void method, return values and overloading', code:J`
+static void greet(String name) {
+    System.out.println("Hi, " + name + "!");
+}
+static int square(int n) {
+    return n * n;
+}
+static double square(double n) {
+    return n * n;
+}
+public static void main(String[] args) {
+    greet("Angela");
+    int s = square(4);
+    double d = square(2.5);
+    System.out.println(s + " " + d);
+}`,
+ *gen(io){
+   yield [10,{'call stack':'main()'},'Start in main.'];
+   yield [11,{'call stack':'main()'},'Call greet with the argument "Angela".'];
+   yield [1,{'call stack':'main() ▸ greet("Angela")',name:'"Angela"'},'Inside greet, the parameter <b>name</b> holds "Angela".'];
+   io.println('Hi, Angela!'); yield [2,{'call stack':'main() ▸ greet("Angela")',name:'"Angela"'},'Print the greeting. greet is <b>void</b>, so nothing is returned; we just go back.'];
+   yield [12,{'call stack':'main()'},'<code>square(4)</code>: 4 is an <b>int</b>, so Java picks <code>square(int n)</code>.'];
+   yield [4,{'call stack':'main() ▸ square(int 4)',n:4},'Inside the int version: n = 4.'];
+   yield [5,{'call stack':'main() ▸ square(int 4)',n:4},'return 4 * 4 = <b>16</b>.'];
+   yield [12,{'call stack':'main()',s:16},'s = 16.'];
+   yield [13,{'call stack':'main()',s:16},'<code>square(2.5)</code>: 2.5 is a <b>double</b>, so Java picks the overloaded <code>square(double n)</code>.'];
+   yield [7,{'call stack':'main() ▸ square(double 2.5)',n:2.5},'Inside the double version: n = 2.5.'];
+   yield [8,{'call stack':'main() ▸ square(double 2.5)',n:2.5},'return 2.5 * 2.5 = <b>6.25</b>.'];
+   yield [13,{'call stack':'main()',s:16,d:6.25},'d = 6.25.'];
+   io.println('16 6.25'); yield [14,{'call stack':'main()',s:16,d:6.25},'Print s and d. Same method name, two different versions: that is <b>overloading</b>.'];
+ }},
+
+/* ---------------- 1D ARRAYS ---------------- */
+'arr-add10': { title:'Add 10 to every element, then print', code:J`
+int[] no = {1, 2, 3, 4, 5};
+for (int i = 0; i < 5; i++)
+    no[i] += 10;
+for (int i = 0; i < 5; i++)
+    System.out.print(no[i] + " ");`,
+ *gen(io){
+   const no=[1,2,3,4,5]; yield [1,{no},'Create an array of 5 ints. Indexes go from 0 to 4.'];
+   let i=0; yield [2,{no,i},'First loop: i = 0.'];
+   while(true){
+     const ok=i<5; yield [2,{no,i},`Check <code>${i} &lt; 5</code>: <b>${ok}</b>.`, ok?{arr:'no',i}:null];
+     if(!ok)break;
+     const old=no[i]; no[i]+=10; yield [3,{no,i},`no[${i}] += 10 → ${old} + 10 = <b>${no[i]}</b>.`,{arr:'no',i}];
+     i++;
+   }
+   i=0; yield [4,{no,i},'Second loop: start again at i = 0 to print.'];
+   while(true){
+     const ok=i<5; yield [4,{no,i},`Check <code>${i} &lt; 5</code>: <b>${ok}</b>.`, ok?{arr:'no',i}:null];
+     if(!ok)break;
+     io.print(no[i]+' '); yield [5,{no,i},`Print no[${i}] = <b>${no[i]}</b> followed by a space.`,{arr:'no',i}];
+     i++;
+   }
+   yield [5,{no},'Done. Every element is 10 bigger.'];
+ }},
+'arr-max': { title:'Find the largest element', code:J`
+int[] scores = {72, 95, 88, 99, 91};
+int max = scores[0];
+for (int i = 1; i < scores.length; i++) {
+    if (scores[i] > max) {
+        max = scores[i];
+    }
+}
+System.out.println("Max is " + max);`,
+ *gen(io){
+   const scores=[72,95,88,99,91]; yield [1,{scores},'scores.length is 5.'];
+   let max=scores[0]; yield [2,{scores,max},'Assume the first element is the largest so far: max = 72.',{arr:'scores',i:0}];
+   let i=1;
+   while(true){
+     const ok=i<scores.length; yield [3,{scores,max,i},`Check <code>${i} &lt; 5</code>: <b>${ok}</b>.${i===1?' (We start at 1 because index 0 is already in max.)':''}`, ok?{arr:'scores',i}:null];
+     if(!ok)break;
+     const gt=scores[i]>max; yield [4,{scores,max,i},`Is scores[${i}] (${scores[i]}) &gt; max (${max})? <b>${gt}</b>.`,{arr:'scores',i}];
+     if(gt){ max=scores[i]; yield [5,{scores,max,i},`New largest found: max = <b>${max}</b>.`,{arr:'scores',i}]; }
+     i++;
+   }
+   io.println('Max is '+max); yield [8,{scores,max},`Print the result: ${max}.`];
+ }},
+
+/* ---------------- 2D ARRAYS ---------------- */
+'g-sum': { title:'Sum all elements with a nested for loop', code:J`
+int[][] m = { {1, 2, 3}, {4, 5, 6} };
+int sum = 0;
+for (int r = 0; r < m.length; r++) {
+    for (int c = 0; c < m[r].length; c++) {
+        sum += m[r][c];
+    }
+}
+System.out.println("Sum = " + sum);`,
+ *gen(io){
+   const m=[[1,2,3],[4,5,6]]; yield [1,{m},'m has 2 rows and 3 columns. m.length = 2, m[0].length = 3.'];
+   let sum=0; yield [2,{m,sum},'sum = 0.'];
+   let r=0;
+   while(true){
+     const ok=r<m.length; yield [3,{m,sum,r},`Outer loop: <code>${r} &lt; 2</code> is <b>${ok}</b>.${ok?` Work on row ${r}.`:''}`, ok?{arr:'m',r}:null];
+     if(!ok)break;
+     let c=0;
+     while(true){
+       const ok2=c<m[r].length; yield [4,{m,sum,r,c},`Inner loop: <code>${c} &lt; 3</code> is <b>${ok2}</b>.${ok2?'':' Inner loop done; back to the outer loop.'}`, ok2?{arr:'m',r,c}:{arr:'m',r}];
+       if(!ok2)break;
+       sum+=m[r][c]; yield [5,{m,sum,r,c},`sum += m[${r}][${c}] (${m[r][c]}) → sum = <b>${sum}</b>.`,{arr:'m',r,c}];
+       c++;
+     }
+     r++;
+   }
+   io.println('Sum = '+sum); yield [8,{m,sum},'All 6 cells visited (2 rows × 3 columns). Print the sum.'];
+ }},
+'g-foreach': { title:'Print a seat plan with nested for-each', code:J`
+String[][] seats = { {"Ana", "Ben"}, {"Cris", "Dan"}, {"Eli", "Fe"} };
+for (String[] row : seats) {
+    for (String name : row) {
+        System.out.print(name + " ");
+    }
+    System.out.println();
+}`,
+ *gen(io){
+   const seats=[['Ana','Ben'],['Cris','Dan'],['Eli','Fe']]; yield [1,{seats},'3 rows, 2 seats per row.'];
+   for(let r=0;r<seats.length;r++){
+     const row=seats[r];
+     yield [2,{seats,row},`Outer for-each: <b>row</b> now holds the whole array seats[${r}].`,{arr:'seats',r}];
+     for(let c=0;c<row.length;c++){
+       const name=row[c];
+       yield [3,{seats,row,name:'"'+name+'"'},`Inner for-each: <b>name</b> = "${name}".`,{arr:'seats',r,c}];
+       io.print(name+' '); yield [4,{seats,row,name:'"'+name+'"'},`Print "${name} ".`,{arr:'seats',r,c}];
+     }
+     io.println(); yield [6,{seats,row},'Row finished: print a new line.',{arr:'seats',r}];
+   }
+   yield [7,{seats},'No more rows. Done. No index variables were needed.'];
+ }}
+};
+
+/* ---------------- quick checks inside discussions ---------------- */
+const QUICK = {
+ loops1:{q:'What does this print?',code:J`
+int i = 7;
+do {
+    System.out.print(i + " ");
+    i++;
+} while (i < 5);`,o:['Nothing','7','7 8 9 10 …','5 6'],a:1,e:'A do-while always runs its body once before checking. It prints 7, then 8 &lt; 5 is false, so it stops.'},
+ loops2:{q:'A program shows a menu, does the chosen task, then asks "Do another? (y/n)". Which loop fits best?',o:['for','while','do/while'],a:2,e:'The menu must appear at least once, so do/while is the natural fit.'},
+ methods1:{q:'In <code>myMethod("Mark", 20)</code>, what are <code>"Mark"</code> and <code>20</code>?',o:['Parameters','Arguments','Return values','Data types'],a:1,e:'Values passed in a call are <b>arguments</b>. The variables that receive them (fname, age) are <b>parameters</b>.'},
+ methods2:{q:'Which pair is a valid overload?',o:['<code>int f(int x)</code> and <code>double f(int x)</code>','<code>int f(int x)</code> and <code>int f(int y)</code>','<code>int f(int x)</code> and <code>int f(int x, int y)</code>'],a:2,e:'Overloads must differ in the parameter list (number or types). Changing only the return type or the parameter name is not enough.'},
+ arrays1:{q:'<code>int[] a = {4, 8, 15, 16, 23};</code> What is <code>a[a.length - 1]</code>?',o:['16','23','5','Error'],a:1,e:'a.length is 5, so a[4] is the last element: 23.'},
+ arrays2d1:{q:'<code>int[][] t = { {3, 6, 9}, {2, 4, 8} };</code> What is <code>t[0][2] + t[1][0]</code>?',o:['11','5','10','15'],a:0,e:'t[0][2] is 9 (row 0, column 2) and t[1][0] is 2 (row 1, column 0). 9 + 2 = 11.'},
+ arrays2d2:{q:'In <code>for (String[] row : seats)</code>, what does <code>row</code> hold each time?',o:['One name','The index of the row','One whole row (an array of names)','The number of rows'],a:2,e:'The outer for-each walks the outer array, whose elements are themselves arrays, so row is a String[].'}
+};
+
+const QUIZ = {
+ "loops": [
+  {
+   "q": "What is printed?",
+   "code": "\nint x = 0;\nfor (int i = 1; i <= 5; i++) {\n    if (i % 2 == 0) continue;\n    x += i;\n}\nSystem.out.println(x);",
+   "o": [
+    "9",
+    "15",
+    "6",
+    "10"
+   ],
+   "a": 0,
+   "e": "continue skips the even values, so x = 1 + 3 + 5 = 9."
+  },
+  {
+   "q": "How many asterisks are printed?",
+   "code": "\nfor (int i = 0; i < 4; i++)\n    for (int j = i; j < 4; j++)\n        System.out.print(\"*\");",
+   "o": [
+    "16",
+    "4",
+    "6",
+    "10"
+   ],
+   "a": 3,
+   "e": "The inner loop runs 4, 3, 2, 1 times: 4 + 3 + 2 + 1 = 10."
+  },
+  {
+   "q": "What is printed?",
+   "code": "\nint i = 10;\ndo {\n    i -= 3;\n} while (i > 0);\nSystem.out.println(i);",
+   "o": [
+    "1",
+    "0",
+    "-2",
+    "-1"
+   ],
+   "a": 2,
+   "e": "i goes 7, 4, 1, −2. The check happens after each subtraction, so the loop stops only when i = −2."
+  },
+  {
+   "q": "What is printed?",
+   "code": "\nint n = 1;\nwhile (n < 100)\n    n *= 3;\nSystem.out.println(n);",
+   "o": [
+    "81",
+    "243",
+    "100",
+    "729"
+   ],
+   "a": 1,
+   "e": "n becomes 3, 9, 27, 81, 243. 81 < 100 is still true, so one more multiplication gives 243."
+  },
+  {
+   "q": "What is printed?",
+   "code": "\nfor (int i = 5; i > 0; i -= 2)\n    System.out.print(i);",
+   "o": [
+    "531",
+    "54321",
+    "5310",
+    "53"
+   ],
+   "a": 0,
+   "e": "i = 5, 3, 1. Next i = −1 fails i > 0."
+  },
+  {
+   "q": "What is printed?",
+   "code": "\nint count = 0;\nfor (int i = 0; i < 10; i++) {\n    if (i == 7) break;\n    if (i % 3 == 0) continue;\n    count++;\n}\nSystem.out.println(count);",
+   "o": [
+    "7",
+    "5",
+    "3",
+    "4"
+   ],
+   "a": 3,
+   "e": "i runs 0–6 before break. 0, 3, 6 are skipped, so count = 4 (for 1, 2, 4, 5)."
+  },
+  {
+   "q": "Which loop runs its body exactly 6 times?",
+   "o": [
+    "for (int i = 0; i <= 6; i++)",
+    "for (int i = 1; i < 6; i++)",
+    "for (int i = 10; i > 4; i--)",
+    "for (int i = 0; i < 12; i += 3)"
+   ],
+   "a": 2,
+   "e": "10, 9, 8, 7, 6, 5 = 6 times. The others run 7, 5 and 4 times."
+  },
+  {
+   "q": "What happens when this runs?",
+   "code": "\nint i = 0;\nwhile (i < 5); {\n    System.out.println(i);\n    i++;\n}",
+   "o": [
+    "Prints 0 to 4",
+    "Runs forever and prints nothing",
+    "Prints nothing and ends",
+    "Compile error"
+   ],
+   "a": 1,
+   "e": "The semicolon after while (i < 5) is an empty loop body. i never changes, so the loop never ends and the block below is never reached."
+  },
+  {
+   "q": "What is printed?",
+   "code": "\nint sum = 0;\nfor (int i = 1; i <= 3; i++)\n    for (int j = 1; j <= i; j++)\n        sum += j;\nSystem.out.println(sum);",
+   "o": [
+    "10",
+    "14",
+    "9",
+    "6"
+   ],
+   "a": 0,
+   "e": "i = 1 adds 1; i = 2 adds 1 + 2; i = 3 adds 1 + 2 + 3. Total 1 + 3 + 6 = 10."
+  },
+  {
+   "q": "What is printed?",
+   "code": "\nint i;\nfor (i = 0; i < 10; i += 4) { }\nSystem.out.println(i);",
+   "o": [
+    "8",
+    "9",
+    "10",
+    "12"
+   ],
+   "a": 3,
+   "e": "i takes 0, 4, 8, then 12. 12 < 10 is false, so the loop ends with i = 12."
+  }
+ ],
+ "methods": [
+  {
+   "q": "What is printed?",
+   "code": "\nstatic int f(int n) { return n * n - 1; }\n\nSystem.out.println(f(f(2)));",
+   "o": [
+    "3",
+    "8",
+    "15",
+    "9"
+   ],
+   "a": 1,
+   "e": "f(2) = 3, then f(3) = 9 − 1 = 8."
+  },
+  {
+   "q": "What is printed?",
+   "code": "\nstatic void addTen(int x) { x = x + 10; }\n\nint a = 5;\naddTen(a);\nSystem.out.println(a);",
+   "o": [
+    "5",
+    "15",
+    "10",
+    "Compile error"
+   ],
+   "a": 0,
+   "e": "Java passes a copy of the int value. Changing x inside the method does not change a."
+  },
+  {
+   "q": "What is printed?",
+   "code": "\nstatic void change(int[] arr) { arr[0] = 99; }\n\nint[] nums = {1, 2, 3};\nchange(nums);\nSystem.out.println(nums[0]);",
+   "o": [
+    "1",
+    "Compile error",
+    "0",
+    "99"
+   ],
+   "a": 3,
+   "e": "The method receives a copy of the reference, which points to the same array, so the change is visible in main."
+  },
+  {
+   "q": "What is printed?",
+   "code": "\nstatic void show(int x)    { System.out.print(\"int \"); }\nstatic void show(double x) { System.out.print(\"double \"); }\n\nshow(5);\nshow(5.0);\nshow('A');",
+   "o": [
+    "int double char",
+    "int double double",
+    "int double int",
+    "Compile error"
+   ],
+   "a": 2,
+   "e": "There is no show(char), so 'A' is widened to int (its code 65) and the int version runs."
+  },
+  {
+   "q": "Which header correctly declares a method that returns the average of three ints?",
+   "o": [
+    "static double avg(int a, b, c)",
+    "static double avg(int a, int b, int c)",
+    "static avg(int a, int b, int c)",
+    "static void double avg(int a, int b, int c)"
+   ],
+   "a": 1,
+   "e": "Each parameter needs its own type, and a method has exactly one return type."
+  },
+  {
+   "q": "What is printed?",
+   "code": "\nstatic int x = 10;\nstatic void test() {\n    int x = 5;\n    x++;\n}\n\ntest();\nSystem.out.println(x);",
+   "o": [
+    "10",
+    "6",
+    "11",
+    "5"
+   ],
+   "a": 0,
+   "e": "The local x inside test() hides the class variable x. Only the local copy changes."
+  },
+  {
+   "q": "What is printed?",
+   "code": "\nstatic int check(int n) {\n    for (int i = 2; i < n; i++)\n        if (n % i == 0) return i;\n    return n;\n}\n\nSystem.out.println(check(15) + check(7));",
+   "o": [
+    "22",
+    "8",
+    "37",
+    "10"
+   ],
+   "a": 3,
+   "e": "check(15) returns 3 (its smallest divisor); check(7) returns 7. Both are ints, so 3 + 7 = 10."
+  },
+  {
+   "q": "What is printed?",
+   "code": "\nstatic int sq(int n) { return n * n; }\n\nSystem.out.println(\"Result: \" + sq(2) + sq(3));",
+   "o": [
+    "Result: 13",
+    "Result: 4 9",
+    "Result: 49",
+    "Compile error"
+   ],
+   "a": 2,
+   "e": "The expression is evaluated left to right: \"Result: \" + 4 is a String, then + 9 appends \"9\"."
+  },
+  {
+   "q": "Given <code>static double area(double w, double h)</code>, which call does NOT compile?",
+   "o": [
+    "area(2, 3)",
+    "area(\"2\", \"3\")",
+    "area(2.5, 4)",
+    "double x = area(1, 1);"
+   ],
+   "a": 1,
+   "e": "int arguments widen to double automatically, but a String cannot be converted to double."
+  },
+  {
+   "q": "What is printed?",
+   "code": "\nstatic int countDigits(int n) {\n    int c = 0;\n    do { c++; n /= 10; } while (n > 0);\n    return c;\n}\n\nSystem.out.println(countDigits(0) + \" \" + countDigits(4050));",
+   "o": [
+    "1 4",
+    "0 4",
+    "0 3",
+    "1 3"
+   ],
+   "a": 0,
+   "e": "The do-while runs at least once, so 0 has 1 digit. 4050 → 405 → 40 → 4 → 0: 4 digits."
+  }
+ ],
+ "arrays": [
+  {
+   "q": "What is printed?",
+   "code": "\nint[] a = {3, 8, 1, 9, 4};\nint x = 0;\nfor (int i = 0; i < a.length; i++)\n    if (a[i] > a[x]) x = i;\nSystem.out.println(x);",
+   "o": [
+    "9",
+    "4",
+    "3",
+    "1"
+   ],
+   "a": 2,
+   "e": "x stores the index of the largest value, not the value: 9 is at index 3."
+  },
+  {
+   "q": "What is printed?",
+   "code": "\nint[] a = new int[4];\na[1] = 5;\na[3] = a[1] * 2;\nSystem.out.println(a[0] + a[1] + a[2] + a[3]);",
+   "o": [
+    "10",
+    "15",
+    "Compile error: a[0] not initialized",
+    "0510"
+   ],
+   "a": 1,
+   "e": "Unassigned elements are 0, so 0 + 5 + 0 + 10 = 15. All operands are ints, so it adds."
+  },
+  {
+   "q": "What is printed?",
+   "code": "\nint[] a = {1, 2, 3, 4, 5};\nfor (int i = 1; i < a.length; i++)\n    a[i] = a[i] + a[i - 1];\nSystem.out.println(a[4]);",
+   "o": [
+    "15",
+    "5",
+    "9",
+    "10"
+   ],
+   "a": 0,
+   "e": "Each element becomes a running total: 1, 3, 6, 10, 15."
+  },
+  {
+   "q": "What is printed?",
+   "code": "\nint[] a = {1, 2, 3};\nint[] b = a;\nb[0] = 7;\nSystem.out.println(a[0]);",
+   "o": [
+    "1",
+    "Compile error",
+    "0",
+    "7"
+   ],
+   "a": 3,
+   "e": "b = a copies the reference, not the array. a and b are the same array."
+  },
+  {
+   "q": "What is printed?",
+   "code": "\nint[] a = {5, 10, 15};\nfor (int x : a)\n    x = x * 2;\nSystem.out.println(a[1]);",
+   "o": [
+    "20",
+    "30",
+    "10",
+    "Compile error"
+   ],
+   "a": 2,
+   "e": "The for-each variable x is a copy of each element; assigning to it does not change the array."
+  },
+  {
+   "q": "For <code>int[] a = new int[5];</code> which loop throws ArrayIndexOutOfBoundsException?",
+   "o": [
+    "for (int i = 0; i < a.length; i++) a[i] = i;",
+    "for (int i = 0; i <= a.length; i++) a[i] = i;",
+    "for (int i = a.length - 1; i >= 0; i--) a[i] = i;",
+    "for (int v : a) System.out.print(v);"
+   ],
+   "a": 1,
+   "e": "i <= a.length reaches i = 5, but the last valid index is 4."
+  },
+  {
+   "q": "What is printed?",
+   "code": "\nint[] a = {4, 7, 2, 7, 5};\nint c = 0;\nfor (int i = 0; i < a.length - 1; i++)\n    if (a[i] < a[i + 1]) c++;\nSystem.out.println(c);",
+   "o": [
+    "2",
+    "3",
+    "1",
+    "4"
+   ],
+   "a": 0,
+   "e": "Pairs: (4,7) yes, (7,2) no, (2,7) yes, (7,5) no."
+  },
+  {
+   "q": "What is printed?",
+   "code": "\nint[] a = {1, 2, 3, 4, 5};\nfor (int i = 0; i < a.length / 2; i++) {\n    int t = a[i];\n    a[i] = a[a.length - 1 - i];\n    a[a.length - 1 - i] = t;\n}\nSystem.out.println(a[1] + \"\" + a[2] + a[3]);",
+   "o": [
+    "234",
+    "4321",
+    "9",
+    "432"
+   ],
+   "a": 3,
+   "e": "The loop reverses the array to 5 4 3 2 1. The \"\" makes it String concatenation: \"4\" + \"3\" + \"2\"."
+  },
+  {
+   "q": "What is printed?",
+   "code": "\nString[] s = new String[3];\nSystem.out.println(s[1]);",
+   "o": [
+    "(an empty line)",
+    "0",
+    "null",
+    "NullPointerException"
+   ],
+   "a": 2,
+   "e": "The default value for object types like String is null. Printing null itself is fine; calling a method on it would crash."
+  },
+  {
+   "q": "What is printed?",
+   "code": "\ndouble[] d = {2.5, 3.5, 4.0};\ndouble t = 0;\nfor (double v : d) t += v;\nSystem.out.println(t / d.length);",
+   "o": [
+    "3.0",
+    "3.3333333333333335",
+    "3",
+    "3.33"
+   ],
+   "a": 1,
+   "e": "10.0 / 3 is a double division. Java prints the full double value, ending in ...35 because of floating-point rounding."
+  }
+ ],
+ "arrays2d": [
+  {
+   "q": "What is printed?",
+   "code": "\nint[][] m = new int[3][5];\nSystem.out.println(m.length + \" \" + m[2].length);",
+   "o": [
+    "5 3",
+    "2 4",
+    "15 5",
+    "3 5"
+   ],
+   "a": 3,
+   "e": "m.length is the number of rows; m[2].length is the number of columns in row 2."
+  },
+  {
+   "q": "What is printed?",
+   "code": "\nint[][] m = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};\nint s = 0;\nfor (int i = 0; i < 3; i++)\n    s += m[i][i];\nSystem.out.println(s);",
+   "o": [
+    "12",
+    "45",
+    "15",
+    "24"
+   ],
+   "a": 2,
+   "e": "m[0][0] + m[1][1] + m[2][2] = 1 + 5 + 9 (the main diagonal)."
+  },
+  {
+   "q": "What is printed?",
+   "code": "\nint[][] m = {{1, 2, 3}, {4, 5, 6}};\nSystem.out.println(m[1][0] + m[0][2] * 2);",
+   "o": [
+    "14",
+    "10",
+    "16",
+    "7"
+   ],
+   "a": 1,
+   "e": "m[1][0] = 4 and m[0][2] = 3. Multiplication first: 4 + 6 = 10."
+  },
+  {
+   "q": "What is printed?",
+   "code": "\nint[][] j = {{1}, {2, 3}, {4, 5, 6}};\nint total = 0;\nfor (int[] row : j)\n    total += row.length;\nSystem.out.println(total);",
+   "o": [
+    "6",
+    "21",
+    "3",
+    "9"
+   ],
+   "a": 0,
+   "e": "It adds the row lengths, not the values: 1 + 2 + 3 = 6."
+  },
+  {
+   "q": "What is printed?",
+   "code": "\nint[][] m = {{1, 2, 3}, {4, 5, 6}};\nint s = 0;\nfor (int r = 0; r < m.length; r++)\n    s += m[r][1];\nSystem.out.println(s);",
+   "o": [
+    "6",
+    "15",
+    "9",
+    "7"
+   ],
+   "a": 3,
+   "e": "Column 1 of each row: 2 + 5 = 7."
+  },
+  {
+   "q": "What is printed?",
+   "code": "\nfor (int r = 0; r < 3; r++) {\n    for (int c = 0; c < 3; c++)\n        System.out.print(r == c ? 1 : 0);\n    System.out.println();\n}",
+   "o": [
+    "111 000 000",
+    "001 010 100",
+    "100 010 001",
+    "1 1 1"
+   ],
+   "a": 2,
+   "e": "A 1 appears only where row equals column: the main diagonal (shown here as three lines)."
+  },
+  {
+   "q": "For <code>int[][] m = new int[4][6];</code> which expression is the last element?",
+   "o": [
+    "m[4][6]",
+    "m[3][5]",
+    "m[m.length][m[0].length]",
+    "m[5][3]"
+   ],
+   "a": 1,
+   "e": "Rows 0–3, columns 0–5."
+  },
+  {
+   "q": "What is printed?",
+   "code": "\nint[][] a = {{1, 2}, {3, 4}, {5, 6}};\nint[][] t = new int[2][3];\nfor (int r = 0; r < 3; r++)\n    for (int c = 0; c < 2; c++)\n        t[c][r] = a[r][c];\nSystem.out.println(t[1][2]);",
+   "o": [
+    "6",
+    "5",
+    "4",
+    "ArrayIndexOutOfBoundsException"
+   ],
+   "a": 0,
+   "e": "t is the transpose: t[1][2] = a[2][1] = 6."
+  },
+  {
+   "q": "What is printed?",
+   "code": "\nint n = 0;\nfor (int r = 0; r < 4; r++)\n    for (int c = 0; c < r; c++)\n        n++;\nSystem.out.println(n);",
+   "o": [
+    "16",
+    "10",
+    "4",
+    "6"
+   ],
+   "a": 3,
+   "e": "The inner loop runs 0, 1, 2, 3 times: 6 in total."
+  },
+  {
+   "q": "What happens?",
+   "code": "\nint[][] m = new int[2][];\nm[0] = new int[3];\nSystem.out.println(m[1].length);",
+   "o": [
+    "Prints 0",
+    "Prints 3",
+    "NullPointerException",
+    "Compile error"
+   ],
+   "a": 2,
+   "e": "new int[2][] creates only the outer array. Row 1 was never created, so m[1] is null."
+  }
+ ]
+};
+
+const PAPER = {
+ loops:[
+  {title:'Trace 1: Summing odd numbers', lvl:'easy', code:J`
+int sum = 0;
+for (int i = 1; i <= 9; i += 2) {
+    sum += i;
+}
+System.out.println(sum);`,
+   instr:'Write the value of <b>i</b>, whether the condition is true or false, and <b>sum</b> after the body runs. Write — for sum when the body does not run.',
+   cols:['Pass','i','i <= 9 ?','sum (after body)'],
+   rows:[['#1','1','true','1'],['#2','3','true','4'],['#3','5','true','9'],['#4','7','true','16'],['#5','9','true','25'],['#6','11','false','—']],
+   output:'25'},
+  {title:'Trace 2: Reversing digits', lvl:'medium', code:J`
+int n = 1234;
+int rev = 0;
+while (n > 0) {
+    int d = n % 10;
+    rev = rev * 10 + d;
+    n = n / 10;
+}
+System.out.println(rev);`,
+   instr:'Remember: <code>%</code> gives the remainder and integer <code>/</code> drops the decimal part.',
+   cols:['Pass','n (before)','d','rev','n (after)'],
+   rows:[['#1','1234','4','4','123'],['#2','123','3','43','12'],['#3','12','2','432','1'],['#4','1','1','4321','0']],
+   output:'4321'},
+  {title:'Trace 3: break and continue together', lvl:'medium', code:J`
+for (int i = 1; i <= 10; i++) {
+    if (i % 3 == 0) continue;
+    if (i == 8) break;
+    System.out.print(i + " ");
+}`,
+   instr:'Write the exact output. Which values were skipped by <code>continue</code>, and when did <code>break</code> happen?',
+   output:'1 2 4 5 7',
+   qa:[{q:'Which values of i were skipped by continue?',a:'3 and 6 (multiples of 3 before the loop broke).'},{q:'At what value of i did the loop end, and why?',a:'At i = 8, because the break statement ran.'}]}
+ ],
+ methods:[
+  {title:'Trace 1: The mystery method', lvl:'easy', code:J`
+static int mystery(int x, int y) {
+    int r = 1;
+    for (int i = 1; i <= y; i++) {
+        r = r * x;
+    }
+    return r;
+}
+
+public static void main(String[] args) {
+    System.out.println(mystery(2, 4));
+}`,
+   instr:'Trace the call <code>mystery(2, 4)</code>. Write r after each pass.',
+   cols:['Pass','i','r (after body)'],
+   rows:[['#1','1','2'],['#2','2','4'],['#3','3','8'],['#4','4','16']],
+   output:'16',
+   qa:[{q:'What are the parameters and what are the arguments in this program?',a:'Parameters: x and y. Arguments: 2 and 4.'},{q:'In plain words, what does mystery(x, y) compute?',a:'x raised to the power y (x<sup>y</sup>). mystery(2, 4) = 2⁴ = 16.'}]},
+  {title:'Trace 2: Methods calling methods', lvl:'medium', code:J`
+static void a() {
+    System.out.print("A");
+    b();
+    System.out.print("a");
+}
+static void b() {
+    System.out.print("B");
+}
+public static void main(String[] args) {
+    a();
+    b();
+}`,
+   instr:'Follow the call order. Each row is one print statement as it happens.',
+   cols:['Order','Method running','Printed'],
+   rows:[['#1','a','A'],['#2','b','B'],['#3','a','a'],['#4','b','B']],
+   output:'ABaB'},
+  {title:'Trace 3: Which overload runs?', lvl:'medium', code:J`
+static int add(int a, int b) { return a + b; }
+static double add(double a, double b) { return a + b; }
+static String add(String a, String b) { return a + b; }
+
+public static void main(String[] args) {
+    System.out.println(add(3, 4));
+    System.out.println(add(1.5, 2.0));
+    System.out.println(add("3", "4"));
+}`,
+   instr:'For each call, write which version of <code>add</code> Java chooses (int, double or String) and the result.',
+   cols:['Call','Version','Result'],
+   rows:[['#add(3, 4)','int','7'],['#add(1.5, 2.0)','double','3.5'],['#add("3", "4")','String','34']],
+   output:'7\n3.5\n34'}
+ ],
+ arrays:[
+  {title:'Trace 1: One pass of swapping', lvl:'medium', code:J`
+int[] a = {5, 3, 8, 1, 6};
+for (int i = 0; i < a.length - 1; i++) {
+    if (a[i] > a[i + 1]) {
+        int temp = a[i];
+        a[i] = a[i + 1];
+        a[i + 1] = temp;
+    }
+}
+for (int x : a) System.out.print(x + " ");`,
+   instr:'For each i, compare a[i] and a[i+1]. Write yes/no for swap and the whole array after that pass (separate values with spaces).',
+   cols:['i','a[i]','a[i+1]','Swap?','Array after'],
+   rows:[['#0','5','3','yes','3 5 8 1 6'],['#1','5','8','no','3 5 8 1 6'],['#2','8','1','yes','3 5 1 8 6'],['#3','8','6','yes','3 5 1 6 8']],
+   output:'3 5 1 6 8',
+   qa:[{q:'Where did the largest value end up after one pass? Why is this useful?',a:'At the last index. Repeating this pass is the idea behind Bubble Sort.'}]},
+  {title:'Trace 2: Count and total with for-each', lvl:'easy', code:J`
+int[] n = {4, 7, 2, 9, 7, 3};
+int count = 0;
+int total = 0;
+for (int x : n) {
+    if (x > 4) {
+        count++;
+        total += x;
+    }
+}
+System.out.println(count + " " + total);`,
+   instr:'Write x, whether x &gt; 4, and count and total after each pass.',
+   cols:['x','x > 4 ?','count','total'],
+   rows:[['#4','false','0','0'],['#7','true','1','7'],['#2','false','1','7'],['#9','true','2','16'],['#7','true','3','23'],['#3','false','3','23']],
+   output:'3 23'},
+  {title:'Spot the bug: the average program', lvl:'medium', code:J`
+double nums[] = {10.5, 11.0, 12.5, 13.0, 14.0};
+double result = 0;
+int i;
+for (i = 0; i < 5; i++) {
+    result = result + nums[i];
+    System.out.println("Average is " + result / 5);
+}`,
+   instr:'This program is supposed to print the average once. Read it carefully and answer the questions.',
+   qa:[{q:'How many times is "Average is" printed?',a:'5 times, once per iteration, because the println is inside the loop body.'},{q:'Which printed line shows the correct average?',a:'Only the last one (12.2). The earlier lines divide a partial sum by 5.'},{q:'How do you fix it?',a:'Move the println after the closing brace of the loop. Better still, divide by nums.length instead of 5.'}]}
+ ],
+ arrays2d:[
+  {title:'Trace 1: Fill the table', lvl:'easy', code:J`
+int[][] t = new int[3][4];
+for (int r = 0; r < 3; r++) {
+    for (int c = 0; c < 4; c++) {
+        t[r][c] = r * c;
+    }
+}`,
+   instr:'Write the value stored in every cell after the loops finish.',
+   cols:['','col 0','col 1','col 2','col 3'],
+   rows:[['#row 0','0','0','0','0'],['#row 1','0','1','2','3'],['#row 2','0','2','4','6']]},
+  {title:'Trace 2: Nested loop pattern', lvl:'medium', code:J`
+for (int r = 1; r <= 4; r++) {
+    for (int c = 1; c <= r; c++) {
+        System.out.print(c);
+    }
+    System.out.println();
+}`,
+   instr:'The inner loop limit depends on r. Write how many times the inner loop runs, then the exact output.',
+   cols:['r','Inner loop runs','Line printed'],
+   rows:[['#1','1','1'],['#2','2','12'],['#3','3','123'],['#4','4','1234']],
+   output:'1\n12\n123\n1234'},
+  {title:'Trace 3: Row sums', lvl:'medium', code:J`
+int[][] g = { {2, 4, 6}, {1, 3, 5}, {7, 8, 9} };
+for (int r = 0; r < g.length; r++) {
+    int rowSum = 0;
+    for (int c = 0; c < g[r].length; c++) {
+        rowSum += g[r][c];
+    }
+    System.out.println("Row " + r + ": " + rowSum);
+}`,
+   instr:'Notice that rowSum is reset to 0 at the start of every row.',
+   cols:['r','Values added','rowSum'],
+   rows:[['#0','#2 + 4 + 6','12'],['#1','#1 + 3 + 5','9'],['#2','#7 + 8 + 9','24']],
+   output:'Row 0: 12\nRow 1: 9\nRow 2: 24',
+   qa:[{q:'What one-line change would make the program print column sums instead?',a:'Swap the loops so the outer loop goes over columns (c) and the inner loop over rows (r), summing g[r][c]. Reset the sum per column.'}]}
+ ]
+};
+
+const IDE = {
+ loops:[
+  {title:'Even, multiples of 5, and odd numbers', lvl:'easy',
+   problem:'Write <b>three</b> loops in one program:<br>(a) display the even numbers from 1 to 10 using a <code>do/while</code> loop;<br>(b) display the numbers divisible by 5 from 1 to 50 using a <code>for</code> loop;<br>(c) display the odd numbers from 1 to 20 using a <code>while</code> loop.',
+   output:'Even: 2 4 6 8 10\nDivisible by 5: 5 10 15 20 25 30 35 40 45 50\nOdd: 1 3 5 7 9 11 13 15 17 19',
+   starter:J`
+public class LoopPractice {
+    public static void main(String[] args) {
+        // (a) do/while: even numbers 1-10
+
+        // (b) for: divisible by 5 from 1-50
+
+        // (c) while: odd numbers 1-20
+
+    }
+}`,
+   hints:['For (a), start at 2 and add 2 each time while i &lt;= 10.','For (b), loop i from 1 to 50 and test <code>i % 5 == 0</code>, or simply start at 5 and add 5.','For (c), start at 1 and add 2 while i &lt;= 20.'],
+   solution:J`
+public class LoopPractice {
+    public static void main(String[] args) {
+        // (a) do/while: even numbers 1-10
+        System.out.print("Even: ");
+        int i = 2;
+        do {
+            System.out.print(i + " ");
+            i += 2;
+        } while (i <= 10);
+        System.out.println();
+
+        // (b) for: divisible by 5 from 1-50
+        System.out.print("Divisible by 5: ");
+        for (int n = 1; n <= 50; n++) {
+            if (n % 5 == 0) {
+                System.out.print(n + " ");
+            }
+        }
+        System.out.println();
+
+        // (c) while: odd numbers 1-20
+        System.out.print("Odd: ");
+        int k = 1;
+        while (k <= 20) {
+            System.out.print(k + " ");
+            k += 2;
+        }
+        System.out.println();
+    }
+}`},
+  {title:'Sum up to n', lvl:'easy',
+   problem:'Write a program that accepts an integer from the user and displays the sum of all values from 1 up to that number.',
+   input:'5', output:'Enter an integer: 5\nThe sum is 15.',
+   starter:J`
+import java.util.Scanner;
+
+public class SumToN {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter an integer: ");
+        int n = sc.nextInt();
+        // your loop here
+    }
+}`,
+   hints:['Create <code>int sum = 0;</code> before the loop.','Loop i from 1 to n and do <code>sum += i;</code>.'],
+   solution:J`
+import java.util.Scanner;
+
+public class SumToN {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter an integer: ");
+        int n = sc.nextInt();
+        int sum = 0;
+        for (int i = 1; i <= n; i++) {
+            sum += i;
+        }
+        System.out.println("The sum is " + sum + ".");
+    }
+}`},
+  {title:'Countdown digits', lvl:'easy',
+   problem:'Prompt the user for an integer, then output all the numbers from that integer down to 1 on one line with no spaces. For example, if the input is 8, the output is <code>87654321</code>.',
+   input:'8', output:'Enter an integer: 8\n87654321',
+   starter:J`
+import java.util.Scanner;
+
+public class Countdown {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter an integer: ");
+        int n = sc.nextInt();
+        // your loop here
+    }
+}`,
+   hints:['Start the loop at n and use <code>i--</code>.','Use <code>System.out.print</code> (not println) so everything stays on one line.'],
+   solution:J`
+import java.util.Scanner;
+
+public class Countdown {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter an integer: ");
+        int n = sc.nextInt();
+        for (int i = n; i >= 1; i--) {
+            System.out.print(i);
+        }
+        System.out.println();
+    }
+}`},
+  {title:'Sum of even and odd numbers', lvl:'medium',
+   problem:'Prompt the user for an integer n. Using one loop, compute separately the sum of the <b>even</b> numbers and the sum of the <b>odd</b> numbers from 1 to n.',
+   input:'5', output:'Enter an integer: 5\nSum of even numbers: 6\nSum of odd numbers: 9',
+   starter:J`
+import java.util.Scanner;
+
+public class EvenOddSum {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter an integer: ");
+        int n = sc.nextInt();
+        int evenSum = 0, oddSum = 0;
+        // your loop here
+    }
+}`,
+   hints:['Inside the loop, use <code>if (i % 2 == 0)</code> to decide which sum gets i.','For n = 5: even = 2 + 4 = 6, odd = 1 + 3 + 5 = 9.'],
+   solution:J`
+import java.util.Scanner;
+
+public class EvenOddSum {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter an integer: ");
+        int n = sc.nextInt();
+        int evenSum = 0, oddSum = 0;
+        for (int i = 1; i <= n; i++) {
+            if (i % 2 == 0) {
+                evenSum += i;
+            } else {
+                oddSum += i;
+            }
+        }
+        System.out.println("Sum of even numbers: " + evenSum);
+        System.out.println("Sum of odd numbers: " + oddSum);
+    }
+}`},
+  {title:'Guess the number (challenge)', lvl:'hard',
+   problem:'The secret number is 7. Keep asking the user to guess until they get it right. After each wrong guess, say "Too low!" or "Too high!". At the end, show how many tries it took. Use a <code>do/while</code> loop.',
+   input:'3\n9\n7', output:'Guess the number (1-10): 3\nToo low!\nGuess the number (1-10): 9\nToo high!\nGuess the number (1-10): 7\nCorrect! You got it in 3 tries.',
+   starter:J`
+import java.util.Scanner;
+
+public class GuessGame {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int secret = 7;
+        int guess;
+        int tries = 0;
+        // do/while loop here
+    }
+}`,
+   hints:['The loop must run at least once, so do/while fits: <code>do { ... } while (guess != secret);</code>','Increase tries every time a guess is entered.','Use if / else if to print "Too low!" or "Too high!".'],
+   solution:J`
+import java.util.Scanner;
+
+public class GuessGame {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int secret = 7;
+        int guess;
+        int tries = 0;
+        do {
+            System.out.print("Guess the number (1-10): ");
+            guess = sc.nextInt();
+            tries++;
+            if (guess < secret) {
+                System.out.println("Too low!");
+            } else if (guess > secret) {
+                System.out.println("Too high!");
+            }
+        } while (guess != secret);
+        System.out.println("Correct! You got it in " + tries + " tries.");
+    }
+}`}
+ ],
+ methods:[
+  {title:'Calculator with methods and overloading', lvl:'medium',
+   problem:'Based on the sample Calculator program, add methods to <b>multiply</b> and <b>divide</b> two numbers. Then apply <b>method overloading</b> so each operation works for both <code>int</code> and <code>double</code> using the same method name.',
+   output:'int add: 13\ndouble add: 10.75\nint multiply: 40\ndouble multiply: 11.25\nint divide: 3\ndouble divide: 2.5',
+   starter:J`
+public class Calculator {
+    static int add(int a, int b) {
+        return a + b;
+    }
+    // TODO: overload add for double
+    // TODO: multiply (int and double)
+    // TODO: divide (int and double)
+
+    public static void main(String[] args) {
+        System.out.println("int add: " + add(8, 5));
+        // test the rest here
+    }
+}`,
+   hints:['An overload keeps the same name and changes the parameter types: <code>static double add(double a, double b)</code>.','Integer division drops decimals: 10 / 3 is 3. Double division keeps them: 5.0 / 2.0 is 2.5.','Guard against dividing by zero in the int version with an if statement.'],
+   solution:J`
+public class Calculator {
+    static int add(int a, int b) { return a + b; }
+    static double add(double a, double b) { return a + b; }
+
+    static int multiply(int a, int b) { return a * b; }
+    static double multiply(double a, double b) { return a * b; }
+
+    static int divide(int a, int b) {
+        if (b == 0) {
+            System.out.println("Cannot divide by zero.");
+            return 0;
+        }
+        return a / b;
+    }
+    static double divide(double a, double b) { return a / b; }
+
+    public static void main(String[] args) {
+        System.out.println("int add: " + add(8, 5));
+        System.out.println("double add: " + add(4.5, 6.25));
+        System.out.println("int multiply: " + multiply(8, 5));
+        System.out.println("double multiply: " + multiply(4.5, 2.5));
+        System.out.println("int divide: " + divide(10, 3));
+        System.out.println("double divide: " + divide(5.0, 2.0));
+    }
+}`},
+  {title:'isEven method', lvl:'easy',
+   problem:'Write a method <code>static boolean isEven(int n)</code> that returns <code>true</code> if n is even. In main, loop from 1 to 10 and use the method to print whether each number is odd or even.',
+   output:'1 is odd\n2 is even\n3 is odd\n4 is even\n5 is odd\n6 is even\n7 is odd\n8 is even\n9 is odd\n10 is even',
+   starter:J`
+public class EvenChecker {
+    // write isEven here
+
+    public static void main(String[] args) {
+        for (int i = 1; i <= 10; i++) {
+            // call isEven(i)
+        }
+    }
+}`,
+   hints:['The method body can be a single line: <code>return n % 2 == 0;</code>','In main: <code>if (isEven(i)) ... else ...</code>'],
+   solution:J`
+public class EvenChecker {
+    static boolean isEven(int n) {
+        return n % 2 == 0;
+    }
+
+    public static void main(String[] args) {
+        for (int i = 1; i <= 10; i++) {
+            if (isEven(i)) {
+                System.out.println(i + " is even");
+            } else {
+                System.out.println(i + " is odd");
+            }
+        }
+    }
+}`},
+  {title:'Largest of three', lvl:'easy',
+   problem:'Write a method <code>maxOfThree(int a, int b, int c)</code> that returns the largest of three integers. Ask the user for three numbers and display the largest.',
+   input:'12 45 7', output:'Enter three numbers: 12 45 7\nThe largest is 45',
+   starter:J`
+import java.util.Scanner;
+
+public class MaxOfThree {
+    // write maxOfThree here
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter three numbers: ");
+        int a = sc.nextInt(), b = sc.nextInt(), c = sc.nextInt();
+        // call your method
+    }
+}`,
+   hints:['Start with <code>int max = a;</code> then compare with b and c.','The method must <b>return</b> max, not print it.'],
+   solution:J`
+import java.util.Scanner;
+
+public class MaxOfThree {
+    static int maxOfThree(int a, int b, int c) {
+        int max = a;
+        if (b > max) max = b;
+        if (c > max) max = c;
+        return max;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter three numbers: ");
+        int a = sc.nextInt(), b = sc.nextInt(), c = sc.nextInt();
+        System.out.println("The largest is " + maxOfThree(a, b, c));
+    }
+}`},
+  {title:'Grade remarks', lvl:'medium',
+   problem:'Write two methods: <code>computeAverage(double p, double m, double f)</code> returns the average of prelim, midterm and final grades; <code>getRemarks(double avg)</code> returns "Excellent" (90 and above), "Very Good" (85–89.99), "Good" (80–84.99), "Passed" (75–79.99) or "Failed" (below 75). Use both in main with user input.',
+   input:'88 92 85', output:'Enter prelim, midterm, final: 88 92 85\nAverage: 88.33\nRemarks: Very Good',
+   starter:J`
+import java.util.Scanner;
+
+public class GradeRemarks {
+    // computeAverage(...)
+    // getRemarks(...)
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter prelim, midterm, final: ");
+        double p = sc.nextDouble(), m = sc.nextDouble(), f = sc.nextDouble();
+        // call your methods
+    }
+}`,
+   hints:['getRemarks returns a String, so its header is <code>static String getRemarks(double avg)</code>.','Check from the highest range down with if / else if.','Use <code>String.format("%.2f", avg)</code> to show 2 decimal places.'],
+   solution:J`
+import java.util.Scanner;
+
+public class GradeRemarks {
+    static double computeAverage(double p, double m, double f) {
+        return (p + m + f) / 3;
+    }
+
+    static String getRemarks(double avg) {
+        if (avg >= 90) return "Excellent";
+        else if (avg >= 85) return "Very Good";
+        else if (avg >= 80) return "Good";
+        else if (avg >= 75) return "Passed";
+        else return "Failed";
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter prelim, midterm, final: ");
+        double p = sc.nextDouble(), m = sc.nextDouble(), f = sc.nextDouble();
+        double avg = computeAverage(p, m, f);
+        System.out.println("Average: " + String.format("%.2f", avg));
+        System.out.println("Remarks: " + getRemarks(avg));
+    }
+}`}
+ ],
+ arrays:[
+  {title:'Odd or even from 1 to 10', lvl:'easy',
+   problem:'Write a Java program using an array that determines whether each number from 1 to 10 is odd or even.',
+   output:'1 is an odd number.\n2 is an even number.\n3 is an odd number.\n4 is an even number.\n5 is an odd number.\n6 is an even number.\n7 is an odd number.\n8 is an even number.\n9 is an odd number.\n10 is an even number.',
+   starter:J`
+public class FindEvenOrOddNumber {
+    public static void main(String[] args) {
+        int[] numbers = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        // loop through the array here
+    }
+}`,
+   hints:['Loop with <code>for (int i = 0; i &lt; numbers.length; i++)</code>.','Test <code>numbers[i] % 2 == 0</code>.'],
+   solution:J`
+public class FindEvenOrOddNumber {
+    public static void main(String[] args) {
+        int[] numbers = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        for (int i = 0; i < numbers.length; i++) {
+            if (numbers[i] % 2 == 0) {
+                System.out.println(numbers[i] + " is an even number.");
+            } else {
+                System.out.println(numbers[i] + " is an odd number.");
+            }
+        }
+    }
+}`},
+  {title:'Score statistics', lvl:'medium',
+   problem:'Ask the user to enter 5 quiz scores and store them in an array. Display the sum, the average, the highest score and the lowest score.',
+   input:'85 92 78 95 88', output:'Enter 5 scores: 85 92 78 95 88\nSum: 438\nAverage: 87.6\nHighest: 95\nLowest: 78',
+   starter:J`
+import java.util.Scanner;
+
+public class ScoreStats {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int[] scores = new int[5];
+        System.out.print("Enter 5 scores: ");
+        // 1) read the scores into the array
+        // 2) compute sum, highest, lowest
+        // 3) display results
+    }
+}`,
+   hints:['Read values with <code>scores[i] = sc.nextInt();</code> inside a for loop.','Start highest and lowest at <code>scores[0]</code>, then compare with the rest.','Cast to double for the average: <code>(double) sum / scores.length</code>.'],
+   solution:J`
+import java.util.Scanner;
+
+public class ScoreStats {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int[] scores = new int[5];
+        System.out.print("Enter 5 scores: ");
+        for (int i = 0; i < scores.length; i++) {
+            scores[i] = sc.nextInt();
+        }
+        int sum = 0;
+        int highest = scores[0];
+        int lowest = scores[0];
+        for (int s : scores) {
+            sum += s;
+            if (s > highest) highest = s;
+            if (s < lowest) lowest = s;
+        }
+        double average = (double) sum / scores.length;
+        System.out.println("Sum: " + sum);
+        System.out.println("Average: " + average);
+        System.out.println("Highest: " + highest);
+        System.out.println("Lowest: " + lowest);
+    }
+}`},
+  {title:'Print in reverse', lvl:'easy',
+   problem:'Given <code>String[] fruits = {"Mango", "Banana", "Durian", "Lanzones", "Rambutan"};</code> print the elements in reverse order, then print how many fruit names have more than 5 letters.',
+   output:'Rambutan Lanzones Durian Banana Mango \nNames longer than 5 letters: 4',
+   starter:J`
+public class ReverseFruits {
+    public static void main(String[] args) {
+        String[] fruits = {"Mango", "Banana", "Durian", "Lanzones", "Rambutan"};
+        // print in reverse
+
+        // count names longer than 5 letters
+    }
+}`,
+   hints:['Start at the last index: <code>for (int i = fruits.length - 1; i &gt;= 0; i--)</code>.','A String\'s length is a method: <code>fruits[i].length()</code> (with parentheses), unlike an array\'s <code>length</code>.'],
+   solution:J`
+public class ReverseFruits {
+    public static void main(String[] args) {
+        String[] fruits = {"Mango", "Banana", "Durian", "Lanzones", "Rambutan"};
+        for (int i = fruits.length - 1; i >= 0; i--) {
+            System.out.print(fruits[i] + " ");
+        }
+        System.out.println();
+
+        int count = 0;
+        for (String f : fruits) {
+            if (f.length() > 5) count++;
+        }
+        System.out.println("Names longer than 5 letters: " + count);
+    }
+}`},
+  {title:'Linear search', lvl:'medium',
+   problem:'Store these ID numbers in an array: <code>{1021, 1045, 1100, 1123, 1150}</code>. Ask the user for an ID and report the index where it was found, or "ID not found." Stop searching as soon as it is found (use <code>break</code>).',
+   input:'1100', output:'Enter ID to search: 1100\nID 1100 found at index 2.',
+   starter:J`
+import java.util.Scanner;
+
+public class LinearSearch {
+    public static void main(String[] args) {
+        int[] ids = {1021, 1045, 1100, 1123, 1150};
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter ID to search: ");
+        int key = sc.nextInt();
+        int foundAt = -1;
+        // search here
+    }
+}`,
+   hints:['Compare <code>ids[i] == key</code> for each i.','When found, store i in foundAt and <code>break</code>.','After the loop, if foundAt is still -1, the ID was not found.'],
+   solution:J`
+import java.util.Scanner;
+
+public class LinearSearch {
+    public static void main(String[] args) {
+        int[] ids = {1021, 1045, 1100, 1123, 1150};
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter ID to search: ");
+        int key = sc.nextInt();
+        int foundAt = -1;
+        for (int i = 0; i < ids.length; i++) {
+            if (ids[i] == key) {
+                foundAt = i;
+                break;
+            }
+        }
+        if (foundAt != -1) {
+            System.out.println("ID " + key + " found at index " + foundAt + ".");
+        } else {
+            System.out.println("ID not found.");
+        }
+    }
+}`}
+ ],
+ arrays2d:[
+  {title:'Class record: student averages', lvl:'medium',
+   problem:'A 2D array stores 3 students (rows) × 4 quiz scores (columns). Print each student\'s scores and average, formatted to 2 decimal places.',
+   output:'Student 1: 85 90 78 92  Average: 86.25\nStudent 2: 88 76 95 81  Average: 85.00\nStudent 3: 70 85 89 94  Average: 84.50',
+   starter:J`
+public class ClassRecord {
+    public static void main(String[] args) {
+        int[][] scores = {
+            {85, 90, 78, 92},
+            {88, 76, 95, 81},
+            {70, 85, 89, 94}
+        };
+        // nested loop: print each student's scores and average
+    }
+}`,
+   hints:['Outer loop over rows (students). Reset <code>sum = 0</code> at the start of each row.','Inner loop over columns: print the score and add it to sum.','Average = <code>(double) sum / scores[r].length</code>. Format with <code>String.format("%.2f", avg)</code>.'],
+   solution:J`
+public class ClassRecord {
+    public static void main(String[] args) {
+        int[][] scores = {
+            {85, 90, 78, 92},
+            {88, 76, 95, 81},
+            {70, 85, 89, 94}
+        };
+        for (int r = 0; r < scores.length; r++) {
+            int sum = 0;
+            System.out.print("Student " + (r + 1) + ": ");
+            for (int c = 0; c < scores[r].length; c++) {
+                System.out.print(scores[r][c] + " ");
+                sum += scores[r][c];
+            }
+            double avg = (double) sum / scores[r].length;
+            System.out.println(" Average: " + String.format("%.2f", avg));
+        }
+    }
+}`},
+  {title:'Matrix addition', lvl:'medium',
+   problem:'Add two 2×3 matrices A and B and store the result in a third matrix C, then print C as a table.',
+   output:'8 10 12 \n14 16 18 ',
+   starter:J`
+public class MatrixAdd {
+    public static void main(String[] args) {
+        int[][] a = { {1, 2, 3}, {4, 5, 6} };
+        int[][] b = { {7, 8, 9}, {10, 11, 12} };
+        int[][] c = new int[2][3];
+        // c[r][c] = a[r][c] + b[r][c]
+        // then print c
+    }
+}`,
+   hints:['Careful: if your column variable is named <code>c</code>, it clashes with the array named c. Use <code>col</code> instead.','Use one nested loop to add, then another to print (or do both in one).'],
+   solution:J`
+public class MatrixAdd {
+    public static void main(String[] args) {
+        int[][] a = { {1, 2, 3}, {4, 5, 6} };
+        int[][] b = { {7, 8, 9}, {10, 11, 12} };
+        int[][] c = new int[2][3];
+        for (int row = 0; row < a.length; row++) {
+            for (int col = 0; col < a[row].length; col++) {
+                c[row][col] = a[row][col] + b[row][col];
+            }
+        }
+        for (int[] row : c) {
+            for (int value : row) {
+                System.out.print(value + " ");
+            }
+            System.out.println();
+        }
+    }
+}`},
+  {title:'Multiplication table', lvl:'easy',
+   problem:'Create a 5×5 2D array where <code>table[r][c] = (r + 1) * (c + 1)</code>. Print it as a neat table using <code>\\t</code> (tab) between values.',
+   output:'1\t2\t3\t4\t5\t\n2\t4\t6\t8\t10\t\n3\t6\t9\t12\t15\t\n4\t8\t12\t16\t20\t\n5\t10\t15\t20\t25\t',
+   starter:J`
+public class MultTable {
+    public static void main(String[] args) {
+        int[][] table = new int[5][5];
+        // fill the table
+
+        // print the table
+    }
+}`,
+   hints:['Indexes start at 0, so add 1 to r and c before multiplying.','Print with <code>System.out.print(table[r][c] + "\\t");</code> and call println() after each row.'],
+   solution:J`
+public class MultTable {
+    public static void main(String[] args) {
+        int[][] table = new int[5][5];
+        for (int r = 0; r < table.length; r++) {
+            for (int c = 0; c < table[r].length; c++) {
+                table[r][c] = (r + 1) * (c + 1);
+            }
+        }
+        for (int r = 0; r < table.length; r++) {
+            for (int c = 0; c < table[r].length; c++) {
+                System.out.print(table[r][c] + "\t");
+            }
+            System.out.println();
+        }
+    }
+}`},
+  {title:'Seat plan finder (challenge)', lvl:'hard',
+   problem:'Store a seat plan of 3 rows × 3 seats as a <code>String[][]</code>. Print the plan using a nested for-each loop. Then ask for a name and report its row and seat number (counting from 1), or "not found".',
+   input:'Eli', output:'Ana\tBen\tCris\t\nDan\tEli\tFe\t\nGab\tHan\tIvy\t\nSearch name: Eli\nEli is in row 2, seat 2.',
+   starter:J`
+import java.util.Scanner;
+
+public class SeatFinder {
+    public static void main(String[] args) {
+        String[][] seats = {
+            {"Ana", "Ben", "Cris"},
+            {"Dan", "Eli", "Fe"},
+            {"Gab", "Han", "Ivy"}
+        };
+        // 1) print with nested for-each
+        // 2) search with nested for (you need the indexes)
+    }
+}`,
+   hints:['for-each has no index, so use a normal nested for loop for the search part.','Compare Strings with <code>.equalsIgnoreCase()</code> or <code>.equals()</code>, never <code>==</code>.','Use a boolean <code>found</code> flag to know whether to print "not found".'],
+   solution:J`
+import java.util.Scanner;
+
+public class SeatFinder {
+    public static void main(String[] args) {
+        String[][] seats = {
+            {"Ana", "Ben", "Cris"},
+            {"Dan", "Eli", "Fe"},
+            {"Gab", "Han", "Ivy"}
+        };
+        for (String[] row : seats) {
+            for (String name : row) {
+                System.out.print(name + "\t");
+            }
+            System.out.println();
+        }
+
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Search name: ");
+        String key = sc.nextLine();
+        boolean found = false;
+        for (int r = 0; r < seats.length; r++) {
+            for (int c = 0; c < seats[r].length; c++) {
+                if (seats[r][c].equalsIgnoreCase(key)) {
+                    System.out.println(key + " is in row " + (r + 1) + ", seat " + (c + 1) + ".");
+                    found = true;
+                }
+            }
+        }
+        if (!found) {
+            System.out.println(key + " not found.");
+        }
+    }
+}`}
+ ]
+};
+
+/* =========================================================
+   ENGINE
+   ========================================================= */
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function dedent(s){
+  s=s.replace(/^\s*\n/,'').replace(/\s+$/,'');
+  const lines=s.split('\n');
+  const ind=Math.min(...lines.filter(l=>l.trim()).map(l=>l.match(/^ */)[0].length));
+  return lines.map(l=>l.slice(ind)).join('\n');
+}
+const TOK=/(\/\/.*$)|("(?:[^"\\\n]|\\.)*")|('(?:[^'\\]|\\.)')|\b(abstract|boolean|break|byte|case|catch|char|class|continue|default|do|double|else|extends|final|finally|float|for|if|import|instanceof|int|interface|long|new|package|private|protected|public|return|short|static|super|switch|this|throw|throws|try|void|while|true|false|null)\b|\b(\d+(?:\.\d+)?)\b|\b([A-Z]\w*)\b|(\w+)(?=\s*\()/gm;
+function hl(code){
+  let out='',last=0;
+  code.replace(TOK,(m,cm,st,ch,kw,num,ty,fn,off)=>{
+    out+=esc(code.slice(last,off));
+    const cls=cm?'c':(st||ch)?'s':kw?'k':num?'n':ty?'t':'f';
+    out+=`<span class="${cls}">${esc(m)}</span>`; last=off+m.length; return m;
+  });
+  return out+esc(code.slice(last));
+}
+function codeHTML(code){
+  return `<pre class="code">${code.split('\n').map((l,i)=>`<div class="ln" data-l="${i+1}"><span class="num">${i+1}</span><span>${hl(l)||' '}</span></div>`).join('')}</pre>`;
+}
+function copyText(t){
+  const done=()=>toast('Code copied. Paste it into your IDE.');
+  if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(t).then(done,()=>fallback());}else fallback();
+  function fallback(){const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done();}catch(e){toast('Copy failed: select the code manually.');}ta.remove();}
+}
+let toastT; function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),1800);}
+function cbox(code,title,{run=null}={}){
+  const w=document.createElement('div'); w.className='cbox';
+  w.innerHTML=`<div class="bar-top"><span class="dots"><i></i><i></i><i></i></span><span class="ttl">${esc(title||'Main.java')}</span>${run!==null?'<span class="predict-hint">predict first →</span><button class="mini-btn run">▶ Run</button>':''}<button class="mini-btn cp">Copy</button></div>${codeHTML(code)}${run!==null?'<div class="console"></div>':''}`;
+  $('.cp',w).onclick=()=>copyText(code);
+  if(run!==null){
+    const con=$('.console',w), btn=$('.run',w); let timer;
+    btn.onclick=()=>{
+      clearInterval(timer); con.classList.add('show'); con.textContent=''; let k=0;
+      const step=Math.max(1,Math.ceil(run.length/60));
+      timer=setInterval(()=>{k+=step;con.textContent=run.slice(0,k);if(k>=run.length)clearInterval(timer);},18);
+      btn.textContent='↻ Run again'; const ph=$('.predict-hint',w); if(ph)ph.remove();
+    };
+  }
+  return w;
+}
+function trimNL(s){return s.replace(/^\n/,'').replace(/\n\s*$/,'');}
+
+/* ---- examples & code blocks in markup ---- */
+function buildStatic(){
+  $$('.example').forEach(el=>{
+    const code=dedent($('script[type="text/x-java"]',el).textContent);
+    const o=$('script[type="text/x-output"]',el);
+    el.replaceChildren(cbox(code,el.dataset.title,{run:o?trimNL(o.textContent):null}));
+  });
+  $$('.codeblock').forEach(el=>{
+    const s=$('script[type="text/x-java"]',el); if(!s)return;
+    el.replaceChildren(cbox(dedent(s.textContent),el.dataset.title));
+  });
+}
+
+/* ---- tracer ---- */
+function buildSteps(t){
+  const io={buf:'',print(s){this.buf+=String(s);},println(s=''){this.buf+=String(s)+'\n';}};
+  const steps=[];
+  for(const [line,vars,note,h] of t.gen(io)){
+    steps.push({line,vars:JSON.parse(JSON.stringify(vars||{})),note,h,out:io.buf});
+    if(steps.length>600)break;
+  }
+  return steps;
+}
+function fmtVal(v){ if(typeof v==='number'&&!Number.isInteger(v))return fmtD(v); return v; }
+function varHTML(name,v,h,changed){
+  let body;
+  if(Array.isArray(v)&&Array.isArray(v[0])){
+    const H=h&&h.arr===name?h:null;
+    body=`<table class="g2"><tr><th></th>${v[0].map((_,c)=>`<th>[${c}]</th>`).join('')}</tr>${v.map((row,r)=>`<tr><th>[${r}]</th>${row.map((x,c)=>{const on=H&&H.r===r&&(H.c===undefined?false:H.c===c);const rowOn=H&&H.r===r&&H.c===undefined;return `<td class="${on?'hl':rowOn?'row-hl':''}">${esc(fmtVal(x))}</td>`;}).join('')}</tr>`).join('')}</table>`;
+  }else if(Array.isArray(v)){
+    const H=h&&h.arr===name?h:null;
+    body=`<div class="arr">${v.map((x,i)=>`<div class="cell ${H&&H.i===i?'hl':''}"><span>${esc(fmtVal(x))}</span><small>[${i}]</small></div>`).join('')}</div>`;
+  }else body=`<span class="vl">${esc(fmtVal(v))}</span>`;
+  return `<div class="var ${changed?'chg':''}"><span class="nm">${esc(name)}</span>${body}</div>`;
+}
+function normOut(s){return s.replace(/\r/g,'').split('\n').map(l=>l.trimEnd()).join('\n').replace(/\n+$/,'').trim();}
+function looseOut(s){return s.replace(/\s+/g,' ').trim().toLowerCase();}
+function mountTracer(slot,id){
+  const t=TRACES[id]; const code=dedent(t.code); const steps=buildSteps(t);
+  slot.innerHTML=`<div class="tracer" tabindex="0">
+    <div class="tr-head"><b>${esc(t.title)}</b><span class="tr-count"></span></div>
+    <div class="tr-predict"><label for="p-${id}">✍️ Your predicted output:</label><textarea id="p-${id}" rows="2" placeholder="Type what you think will be printed…"></textarea></div>
+    <div class="tr-body"><div>${codeHTML(code)}</div>
+      <div class="tr-side"><div><h4>What's happening</h4></div><div class="tr-note"></div><h4>Variables</h4><div class="tr-vars"></div><h4>Console output</h4><pre class="tr-out"></pre></div></div>
+    <div class="tr-ctrl"><button class="btn" data-a="reset" title="Back to start">⟲</button><button class="btn" data-a="back">◀ Back</button><button class="btn primary" data-a="next">Step ▶</button><button class="btn" data-a="play">▶▶ Auto</button><input type="range" min="0" value="0"><span class="kbd-tip">← → keys work too</span></div>
+    <div class="tr-result"></div></div>`;
+  const box=$('.tracer',slot), lines=$$('.ln',box), note=$('.tr-note',box), vars=$('.tr-vars',box), out=$('.tr-out',box), cnt=$('.tr-count',box), rng=$('input[type=range]',box), res=$('.tr-result',box), pred=$('textarea',box);
+  rng.max=steps.length; let k=0, timer=null;
+  function render(){
+    lines.forEach(l=>l.classList.remove('cur'));
+    if(k===0){ note.innerHTML='Press <b>Step ▶</b> to start. Line '+steps[0].line+' runs first.'; vars.innerHTML='<span style="color:var(--muted);font-size:.9rem">No variables yet</span>'; out.textContent=''; cnt.textContent=`Step 0 / ${steps.length}`; rng.value=0; res.className='tr-result'; return; }
+    const s=steps[k-1], p=k>1?steps[k-2]:{vars:{}};
+    const ln=lines[s.line-1]; ln.classList.add('cur');
+    const pre=ln.closest('.code'); const top=ln.offsetTop-pre.clientHeight/2; if(pre.scrollHeight>pre.clientHeight) pre.scrollTo({top,behavior:'smooth'});
+    note.innerHTML=s.note||'';
+    const keys=Object.keys(s.vars);
+    vars.innerHTML=keys.length?keys.map(n=>varHTML(n,s.vars[n],s.h,JSON.stringify(s.vars[n])!==JSON.stringify(p.vars[n]))).join(''):'<span style="color:var(--muted);font-size:.9rem">No variables in scope</span>';
+    out.textContent=s.out; out.scrollTop=out.scrollHeight;
+    cnt.textContent=`Step ${k} / ${steps.length}`; rng.value=k;
+    if(k===steps.length){
+      const guess=pred.value.trim(); res.classList.add('show');
+      if(!guess){res.className='tr-result show';res.innerHTML='🏁 Finished! Next time, type a prediction first and see if you are right.';}
+      else if(normOut(guess)===normOut(s.out)||looseOut(guess)===looseOut(s.out)){res.className='tr-result show ok';res.innerHTML='🎉 Your prediction matches the actual output!';}
+      else{res.className='tr-result show bad';res.innerHTML='Not quite. Compare your prediction with the console output, then step back to find where your trace went differently.';}
+      markDone(slot.closest('.topic').id,'trace');
+    } else res.className='tr-result';
+  }
+  function stop(){clearInterval(timer);timer=null;$('[data-a=play]',box).textContent='▶▶ Auto';}
+  box.addEventListener('click',e=>{const a=e.target.closest('[data-a]')?.dataset.a;if(!a)return;
+    if(a==='next'){if(k<steps.length)k++;}
+    if(a==='back'){if(k>0)k--;}
+    if(a==='reset'){k=0;stop();}
+    if(a==='play'){ if(timer){stop();return;} if(k>=steps.length)k=0; $('[data-a=play]',box).textContent='⏸ Pause'; timer=setInterval(()=>{if(k>=steps.length){stop();return;}k++;render();},700); }
+    render();});
+  rng.oninput=()=>{k=+rng.value;render();};
+  box.addEventListener('keydown',e=>{if(e.target===pred)return;if(e.key==='ArrowRight'){k=Math.min(steps.length,k+1);render();e.preventDefault();}if(e.key==='ArrowLeft'){k=Math.max(0,k-1);render();e.preventDefault();}});
+  render();
+}
+function buildTracers(){
+  $$('[data-tracers]').forEach(seg=>{
+    const slot=seg.parentElement.querySelector('.tracer-slot');
+    const go=b=>{$$('button',seg).forEach(x=>x.classList.toggle('on',x===b));mountTracer(slot,b.dataset.t);};
+    seg.addEventListener('click',e=>{const b=e.target.closest('button');if(b)go(b);});
+    go($('button.on',seg)||$('button',seg));
+  });
+}
+
+/* ---- questions & quizzes ---- */
+function questionEl(q,num,onAnswer,order){
+  const d=document.createElement('div'); d.className='q';
+  const idx=order||q.o.map((_,i)=>i);
+  d.innerHTML=`<div class="qn">${num}</div><div class="qt">${q.q}</div>${q.code?codeHTML(dedent(q.code)):''}<div class="opts" style="margin-top:${q.code?'12px':'0'}">${idx.map((oi,j)=>`<button class="opt" data-i="${oi}"><span class="L">${'ABCDE'[j]}</span><span>${q.o[oi]}</span></button>`).join('')}</div><div class="fb"></div>`;
+  $('.opts',d).addEventListener('click',e=>{
+    const b=e.target.closest('.opt'); if(!b||b.disabled)return;
+    const pick=+b.dataset.i, ok=pick===q.a;
+    $$('.opt',d).forEach(x=>{x.disabled=true;const i=+x.dataset.i;if(i===q.a)x.classList.add('right');else if(i===pick)x.classList.add('wrong');else x.classList.add('dim');});
+    const fb=$('.fb',d); fb.className='fb show '+(ok?'ok':'bad'); fb.innerHTML=`<b>${ok?'✓ Correct!':'✗ Not quite.'}</b> <span>${q.e}</span>`;
+    onAnswer&&onAnswer(ok);
+  });
+  return d;
+}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function buildQuiz(el){
+  const topic=el.dataset.topic, qs=QUIZ[topic];
+  function start(shuf){
+    let answered=0,score=0;
+    el.innerHTML=`<div class="quiz-head"><span class="quiz-score">Score: <b class="sc">0</b> / ${qs.length}</span><div class="bar"><i></i></div><span class="qa-count" style="color:var(--muted);font-size:.88rem">0 of ${qs.length} answered</span></div><div class="qs"></div><div class="quiz-done"><div class="big"></div><p class="msg"></p><button class="btn primary retake">↻ Retake (shuffled)</button></div>`;
+    const list=$('.qs',el);
+    const order=shuf?shuffle(qs.map((_,i)=>i)):qs.map((_,i)=>i);
+    order.forEach((qi,n)=>{
+      const q=qs[qi];
+      list.appendChild(questionEl(q,`QUESTION ${n+1}`,ok=>{
+        answered++; if(ok)score++;
+        $('.sc',el).textContent=score; $('.bar>i',el).style.width=(answered/qs.length*100)+'%'; $('.qa-count',el).textContent=`${answered} of ${qs.length} answered`;
+        if(answered===qs.length){
+          const pct=Math.round(score/qs.length*100), done=$('.quiz-done',el);
+          done.classList.add('show'); $('.big',done).textContent=`${score} / ${qs.length}`;
+          $('.msg',done).textContent=pct===100?'Perfect score! You have mastered this lesson. 🏆':pct>=75?'Great job! Review the explanations for the ones you missed.':pct>=50?'Good effort. Go back to the discussion and the code tracer, then try again.':'Keep going! Re-read the discussion, step through the tracer, and retake the quiz.';
+          saveQuiz(topic,score,qs.length);
+        }
+      },shuf?shuffle(q.o.map((_,i)=>i)):null));
+    });
+    $('.retake',el).onclick=()=>{start(true);el.scrollIntoView({behavior:'smooth'});};
+  }
+  start(false);
+}
+function buildQuick(){
+  $$('.quick').forEach(el=>{const q=QUICK[el.dataset.q]; if(q) el.appendChild(questionEl(q,'QUICK CHECK'));});
+}
+
+/* ---- paper activities ---- */
+function normCell(s){return String(s).trim().toLowerCase().replace(/\s+/g,' ').replace(/^"|"$/g,'');}
+function cellOk(input,exp){
+  const a=normCell(input), e=normCell(exp);
+  if(e==='—') return ['','-','—','n/a','none','x'].includes(a);
+  if(a===e) return true;
+  if(a.replace(/[\s,]/g,'')===e.replace(/[\s,]/g,'')) return true;
+  if(e==='yes'&&['y','true','swap'].includes(a)) return true;
+  if(e==='no'&&['n','false'].includes(a)) return true;
+  return false;
+}
+function buildPaper(el){
+  PAPER[el.dataset.topic].forEach((p,n)=>{
+    const d=document.createElement('div'); d.className='paper-item';
+    let html=`<div class="item-head"><span class="lvl ${p.lvl}">${p.lvl}</span><h3>${n+1}. ${esc(p.title)}</h3></div><p>${p.instr||''}</p>${codeHTML(dedent(p.code))}`;
+    if(p.cols){
+      html+=`<span class="lbl">Trace table</span><div class="ttable-wrap"><table class="ttable"><tr>${p.cols.map(c=>`<th>${esc(c)}</th>`).join('')}</tr>${p.rows.map(r=>`<tr>${r.map(c=>c.startsWith('#')?`<td class="given">${esc(c.slice(1))}</td>`:`<td><input data-exp="${esc(c)}" aria-label="answer"></td>`).join('')}</tr>`).join('')}</table></div>`;
+    }
+    if(p.output!==undefined){
+      html+=`<span class="lbl">Output</span><textarea class="out-box" rows="${Math.max(2,p.output.split('\n').length+1)}" placeholder="Write the exact output…"></textarea><div class="key out-key"><b>Answer key: output</b><pre>${esc(p.output)}</pre></div>`;
+    }
+    if(p.qa){
+      html+=`<span class="lbl">Questions</span>`+p.qa.map(q=>`<div class="qa"><div class="ask">${q.q}</div><div class="key"><b>Answer:</b> ${q.a}</div></div>`).join('');
+    }
+    html+=`<div class="btn-row">${(p.cols||p.output!==undefined)?'<button class="btn primary" data-a="check">✓ Check my answers</button>':''}<button class="btn" data-a="key">👁 Show answer key</button><button class="btn ghost" data-a="clear">Clear</button><span class="status"></span></div>`;
+    d.innerHTML=html;
+    const st=$('.status',d);
+    d.addEventListener('click',e=>{
+      const a=e.target.closest('[data-a]')?.dataset.a; if(!a)return;
+      const ins=$$('input[data-exp]',d), ob=$('.out-box',d);
+      if(a==='check'){
+        let right=0,total=0;
+        ins.forEach(i=>{total++;const ok=cellOk(i.value,i.dataset.exp);i.classList.toggle('ok',ok);i.classList.toggle('bad',!ok);if(ok)right++;});
+        if(ob){total++;const ok=normOut(ob.value)===normOut(p.output)||looseOut(ob.value)===looseOut(p.output);ob.classList.toggle('ok',ok);ob.classList.toggle('bad',!ok);if(ok)right++;}
+        st.className='status '+(right===total?'ok':'bad'); st.textContent=right===total?`All ${total} correct! 🎉`:`${right} / ${total} correct. Fix the red ones.`;
+        if(right===total)markDone(el.closest('.topic').id,'paper');
+      }
+      if(a==='key'){
+        ins.forEach(i=>{i.value=i.dataset.exp;i.classList.add('ok');i.classList.remove('bad');});
+        if(ob){ob.value=p.output;ob.classList.add('ok');ob.classList.remove('bad');}
+        $$('.key',d).forEach(k=>k.classList.add('show')); st.className='status';st.textContent='Answer key shown.';
+      }
+      if(a==='clear'){
+        ins.forEach(i=>{i.value='';i.classList.remove('ok','bad');}); if(ob){ob.value='';ob.classList.remove('ok','bad');}
+        $$('.key',d).forEach(k=>k.classList.remove('show')); st.textContent='';
+      }
+    });
+    el.appendChild(d);
+  });
+}
+
+/* ---- IDE activities ---- */
+function buildIDE(el){
+  IDE[el.dataset.topic].forEach((p,n)=>{
+    const d=document.createElement('div'); d.className='ide-item';
+    const inLines=(p.input||'').split('\n');
+    let sample=esc(p.output);
+    if(p.input){ // colour typed input yellow
+      let li=0; sample=p.output.split('\n').map(line=>{
+        const want=inLines[li]; if(want!==undefined&&line.endsWith(': '+want)){li++;return esc(line.slice(0,line.length-want.length))+`<span class="in">${esc(want)}</span>`;} return esc(line);
+      }).join('\n');
+    }
+    d.innerHTML=`<div class="item-head"><span class="lvl ${p.lvl}">${p.lvl}</span><h3>${n+1}. ${esc(p.title)}</h3></div>
+      <p>${p.problem}</p>
+      <div class="io">${p.input?`<div><span class="lbl" style="margin-top:0">Sample input</span><pre>${esc(p.input)}</pre></div>`:''}<div style="${p.input?'':'grid-column:1/-1'}"><span class="lbl" style="margin-top:0">Expected output${p.input?' <small style="text-transform:none;letter-spacing:0">(yellow = typed by user)</small>':''}</span><pre>${sample}</pre></div></div>
+      <span class="lbl">Starter code</span><div class="starter"></div>
+      <div class="hints">${p.hints.map((h,i)=>`<div class="hint"><b>Hint ${i+1}:</b> ${h}</div>`).join('')}<button class="btn" data-a="hint">💡 Show a hint (0/${p.hints.length})</button></div>
+      <details class="sol"><summary>🔓 Show solution (try it yourself first!)</summary><div class="solbox"></div></details>
+      <span class="lbl">Self-check</span>
+      <ul class="checklist"><li><label><input type="checkbox"> My program compiles with no errors</label></li><li><label><input type="checkbox"> My output matches the expected output exactly</label></li><li><label><input type="checkbox"> I tested it with at least one other input</label></li><li><label><input type="checkbox"> My variable names are meaningful and my code is indented</label></li></ul>`;
+    $('.starter',d).appendChild(cbox(dedent(p.starter),'Starter.java'));
+    $('.solbox',d).appendChild(cbox(dedent(p.solution),'Solution.java'));
+    let shown=0; const hb=$('[data-a=hint]',d), hs=$$('.hint',d);
+    hb.onclick=()=>{ if(shown<hs.length){hs[shown].classList.add('show');shown++;} hb.textContent=shown<hs.length?`💡 Show next hint (${shown}/${hs.length})`:'All hints shown'; hb.disabled=shown>=hs.length; };
+    $$('.checklist input',d).forEach(c=>c.onchange=()=>{ if($$('.checklist input',el).some(x=>x.checked)) markDone(el.closest('.topic').id,'ide'); });
+    el.appendChild(d);
+  });
+}
+
+/* ---- labs ---- */
+function loopLab(){
+  const T=$('#lab-type'),S=$('#lab-start'),O=$('#lab-op'),L=$('#lab-limit'),U=$('#lab-upd');
+  const codeSlot=$('#lab-code'), out=$('#lab-out'), alert=$('#lab-alert');
+  const cmp={'<':(a,b)=>a<b,'<=':(a,b)=>a<=b,'>':(a,b)=>a>b,'>=':(a,b)=>a>=b,'!=':(a,b)=>a!==b};
+  const upd={'i++':i=>i+1,'i--':i=>i-1,'i += 2':i=>i+2,'i -= 2':i=>i-2,'i += 3':i=>i+3,'i *= 2':i=>i*2};
+  function run(){
+    const t=T.value,s=parseInt(S.value)||0,op=O.value,lim=parseInt(L.value)||0,u=U.value;
+    let code;
+    if(t==='for') code=`for (int i = ${s}; i ${op} ${lim}; ${u}) {\n    System.out.print(i + " ");\n}`;
+    else if(t==='while') code=`int i = ${s};\nwhile (i ${op} ${lim}) {\n    System.out.print(i + " ");\n    ${u};\n}`;
+    else code=`int i = ${s};\ndo {\n    System.out.print(i + " ");\n    ${u};\n} while (i ${op} ${lim});`;
+    codeSlot.replaceChildren(cbox(code,'LoopLab.java'));
+    const vals=[]; let i=s, n=0, cap=60, inf=false;
+    if(t==='do'){ do{vals.push(i);i=upd[u](i);n++; if(n>=cap){inf=cmp[op](i,lim);break;}}while(cmp[op](i,lim)); }
+    else { while(cmp[op](i,lim)){vals.push(i);i=upd[u](i);n++; if(n>=cap){inf=cmp[op](i,lim);break;}} }
+    out.innerHTML=vals.length?vals.map((v,j)=>`<span class="chip" style="animation-delay:${Math.min(j,30)*25}ms">${v}</span>`).join(''):'<span style="color:var(--muted)">(nothing printed: the body never ran)</span>';
+    $('#lab-n').textContent=inf?`${n}+ (stopped)`:n;
+    $('#lab-final').textContent=t==='for'?`${i} (but i is out of scope after a for loop)`:i;
+    alert.classList.toggle('show',inf);
+    alert.textContent=inf?`⚠ Infinite loop! The condition i ${op} ${lim} never becomes false with ${u}. We stopped it after ${cap} iterations. A real program would run forever.`:'';
+  }
+  [T,S,O,L,U].forEach(x=>x.addEventListener('input',run));
+  $$('#loopLab [data-preset]').forEach(b=>b.onclick=()=>{const [s,op,lim,u,t]=b.dataset.preset.split(',');S.value=s;O.value=op;L.value=lim;U.value=u;T.value=t;run();});
+  run();
+}
+function arrayLab(){
+  const base=[31,28,31,30,31,30,31,31,30,31,30,31], mon=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  let arr=base.slice(); const cells=$('#arrCells'), idx=$('#arrIdx'), ex=$('#arrExpr');
+  function draw(){
+    const i=+idx.value;
+    cells.innerHTML=arr.map((v,k)=>`<div class="viz-cell ${k===i?'sel':''}" data-k="${k}"><span class="mon">${mon[k]}</span><div class="box">${v}</div><span class="idx">[${k}]</span></div>`).join('');
+    if(i<0||i>=arr.length) ex.innerHTML=`month_days[${i}] → <span class="err">ArrayIndexOutOfBoundsException: Index ${i} out of bounds for length 12</span>`;
+    else ex.innerHTML=`month_days[${i}] → <span class="res">${arr[i]}</span>  <span style="color:#7d8494">// ${mon[i]}</span>`;
+  }
+  cells.addEventListener('click',e=>{const c=e.target.closest('.viz-cell');if(c){idx.value=c.dataset.k;draw();}});
+  idx.oninput=draw;
+  $('#arrSet').onclick=()=>{const i=+idx.value,v=parseInt($('#arrVal').value);if(i<0||i>=arr.length){toast('Cannot assign: index out of bounds!');draw();return;}arr[i]=isNaN(v)?0:v;draw();ex.innerHTML=`month_days[${i}] = ${arr[i]}; <span class="res">// stored ✓</span>`;};
+  $('#arrReset').onclick=()=>{arr=base.slice();draw();};
+  draw();
+}
+function gridLab(){
+  const g=[[85,90,78,92],[88,76,95,81],[70,85,89,94]];
+  const tbl=$('#gridTbl'), ex=$('#gridExpr'); let timer=null;
+  tbl.innerHTML=`<tr><th></th>${g[0].map((_,c)=>`<th>col ${c}</th>`).join('')}</tr>`+g.map((row,r)=>`<tr><th class="rowh" data-r="${r}">row ${r}</th>${row.map((v,c)=>`<td data-r="${r}" data-c="${c}">${v}</td>`).join('')}</tr>`).join('');
+  const clear=()=>$$('td',tbl).forEach(t=>t.classList.remove('sel','row','visited'));
+  tbl.addEventListener('click',e=>{
+    if(timer)return;
+    const td=e.target.closest('td'), th=e.target.closest('th.rowh'); clear();
+    if(td){td.classList.add('sel');ex.innerHTML=`scores[${td.dataset.r}][${td.dataset.c}] → <span class="res">${td.textContent}</span>`;}
+    if(th){const r=+th.dataset.r;$$(`td[data-r="${r}"]`,tbl).forEach(t=>t.classList.add('row'));ex.innerHTML=`scores[${r}] → <span class="res">{${g[r].join(', ')}}</span>  <span style="color:#7d8494">// one whole row is a 1D array</span>`;}
+  });
+  $('#gridPlay').onclick=()=>{
+    if(timer){clearInterval(timer);timer=null;$('#gridPlay').textContent='▶ Animate nested for loop';return;}
+    clear(); const order=[]; const byRow=$('#gridOrder').value==='row';
+    if(byRow){for(let r=0;r<3;r++)for(let c=0;c<4;c++)order.push([r,c]);} else {for(let c=0;c<4;c++)for(let r=0;r<3;r++)order.push([r,c]);}
+    let k=0,sum=0; $('#gridSum').textContent=0; $('#gridPlay').textContent='⏸ Stop';
+    timer=setInterval(()=>{
+      $$('td.sel',tbl).forEach(t=>{t.classList.remove('sel');t.classList.add('visited');});
+      if(k>=order.length){clearInterval(timer);timer=null;$('#gridPlay').textContent='▶ Animate nested for loop';ex.innerHTML=`<span class="res">Done: visited all 12 cells. Sum = ${sum}</span>`;return;}
+      const [r,c]=order[k++]; sum+=g[r][c]; $('#gridSum').textContent=sum;
+      $(`td[data-r="${r}"][data-c="${c}"]`,tbl).classList.add('sel');
+      ex.innerHTML=byRow?`row = ${r}, col = ${c}  →  scores[${r}][${c}] = <span class="res">${g[r][c]}</span>`:`col = ${c}, row = ${r}  →  scores[${r}][${c}] = <span class="res">${g[r][c]}</span>`;
+    },+$('#gridSpeed').value);
+  };
+}
+function methodsBits(){
+  const A={public:'<b>public</b>: an access modifier. The method can be used from other classes too.',static:'<b>static</b>: the method belongs to the class itself, so main can call it directly without creating an object.',type:'<b>int</b>: the <b>return type</b>. This method gives back an int. Use <code>void</code> if it returns nothing.',name:'<b>sum</b>: the method name. Use a verb that describes what it does (camelCase).',params:'<b>(int a, int b)</b>: the <b>parameters</b>. Variables that receive the values (arguments) passed by the caller.',body:'<b>{ … }</b>: the method <b>body</b>. The statements that run when the method is called. <code>return</code> sends a value back.'};
+  $('#anat').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;$$('#anat button').forEach(x=>x.classList.toggle('on',x===b));$('#anatExp').innerHTML=A[b.dataset.a];});
+  $('#wwSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;$$('#wwSeg button').forEach(x=>x.classList.toggle('on',x===b));$('#ww-without').style.display=b.dataset.v==='without'?'':'none';$('#ww-with').style.display=b.dataset.v==='with'?'':'none';});
+}
+
+/* ---- progress ---- */
+const KEY='java-essentials-progress-v1';
+let PROG={}; try{PROG=JSON.parse(localStorage.getItem(KEY))||{};}catch(e){PROG={};}
+function saveProg(){try{localStorage.setItem(KEY,JSON.stringify(PROG));}catch(e){}}
+function markDone(topic,key){PROG[topic]=PROG[topic]||{};if(!PROG[topic][key]){PROG[topic][key]=1;saveProg();refreshProg();}}
+function saveQuiz(topic,s,n){PROG[topic]=PROG[topic]||{};const b=PROG[topic].best||0;if(s>=b)PROG[topic].best=s;PROG[topic].quizN=n;PROG[topic].quiz=1;saveProg();refreshProg();}
+function buildTOC(){
+  $$('.topic[data-topic]').forEach(tp=>{
+    const toc=$('.toc',tp), blocks=$$('.block',tp);
+    toc.innerHTML=blocks.map(b=>`<a href="#${b.id}" data-k="${b.id.split('-').pop()}"><span class="ck">✓</span>${b.dataset.label}</a>`).join('')+`<div class="toc-prog"><div class="bar"><i></i></div><span></span></div>`;
+    toc.addEventListener('click',e=>{const a=e.target.closest('a');if(!a)return;e.preventDefault();$(a.getAttribute('href')).scrollIntoView({behavior:'smooth'});});
+  });
+  const io=new IntersectionObserver(ents=>ents.forEach(en=>{
+    if(!en.isIntersecting)return; const b=en.target, tp=b.closest('.topic');
+    $$('.toc a',tp).forEach(a=>a.classList.toggle('here',a.getAttribute('href')==='#'+b.id));
+    const k=b.id.split('-').pop(); if(['obj','disc','lab'].includes(k)) markDone(tp.id,k);
+  }),{rootMargin:'-30% 0px -55% 0px'});
+  $$('.block').forEach(b=>io.observe(b));
+}
+function refreshProg(){
+  $$('.topic[data-topic]').forEach(tp=>{
+    const p=PROG[tp.id]||{}, links=$$('.toc a',tp); let done=0;
+    links.forEach(a=>{const ok=!!p[a.dataset.k];a.classList.toggle('done',ok);if(ok)done++;});
+    const pct=Math.round(done/links.length*100);
+    $('.toc-prog .bar>i',tp).style.width=pct+'%'; $('.toc-prog span',tp).textContent=`${done} of ${links.length} sections done`;
+    const card=$(`[data-prog="${tp.id}"]`);
+    if(card) card.innerHTML=`<div class="bar"><i style="width:${pct}%"></i></div><span>${pct}% complete${p.quiz?` · Best quiz: ${p.best}/${p.quizN}`:''}</span>`;
+  });
+}
+
+/* ---- routing, theme, print ---- */
+let CUR='home';
+function curHash(){try{return location.hash.slice(1);}catch(e){return '';}}
+function go(h){
+  CUR=h||'home';
+  try{history.replaceState(null,'','#'+CUR);}catch(e){}
+  route(CUR);
+}
+document.addEventListener('click',e=>{
+  if(e.defaultPrevented)return;
+  const a=e.target.closest('a[href^="#"]'); if(!a)return;
+  e.preventDefault(); go(a.getAttribute('href').slice(1));
+});
+function route(force){
+  const h=(typeof force==='string'?force:curHash())||'home';
+  let topic=document.getElementById(h);
+  if(topic&&!topic.classList.contains('topic')) topic=topic.closest('.topic');
+  if(!topic) topic=$('#home');
+  const changed=!topic.classList.contains('show');
+  $$('.topic').forEach(t=>t.classList.toggle('show',t===topic));
+  $$('#tabs a').forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+topic.id));
+  if(h===topic.id||changed) window.scrollTo({top:0,behavior:'instant'});
+  if(h!==topic.id){const el=document.getElementById(h); if(el) setTimeout(()=>el.scrollIntoView(),30);}
+}
+window.addEventListener('hashchange',()=>route());
+(function theme(){
+  let t=null; try{t=localStorage.getItem('java-essentials-theme');}catch(e){}
+  if(t)document.documentElement.dataset.theme=t;
+  $('#themeBtn').onclick=()=>{
+    const cur=document.documentElement.dataset.theme||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+    const nx=cur==='dark'?'light':'dark'; document.documentElement.dataset.theme=nx; try{localStorage.setItem('java-essentials-theme',nx);}catch(e){}
+  };
+})();
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-print]'); if(!b)return;
+  document.body.classList.add('print-paper'); window.print();
+  setTimeout(()=>document.body.classList.remove('print-paper'),500);
+});
+document.addEventListener('click',e=>{const f=e.target.closest('.flip');if(f)f.classList.toggle('on');});
+
+/* ---- boot ---- */
+buildStatic();
+buildQuick();
+$$('.quiz').forEach(buildQuiz);
+$$('.paper').forEach(buildPaper);
+$$('.ide').forEach(buildIDE);
+buildTracers();
+loopLab(); arrayLab(); gridLab(); methodsBits();
+buildTOC(); refreshProg(); route();
+</script>
+<!--TOGGLE-PATCH-START-->
+<style>
+.tg-btn{margin-left:auto;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface2);color:var(--ink);border-radius:999px;padding:6px 14px;font:600 .85rem var(--font-body);cursor:pointer;white-space:nowrap}
+.tg-btn:hover{border-color:var(--accent)}
+.tg-btn .chev{display:inline-block;transition:transform .2s}
+.tg-open>.tg-ctl .chev,.tg-open>h2 .chev,.tg-open>.item-head .chev{transform:rotate(180deg)}
+.tg-body{display:none}
+.tg-open>.tg-body{display:block;animation:tgIn .2s ease}
+@keyframes tgIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.tg-sum{margin:2px 0 0;color:var(--muted);font-size:.92rem}
+.tg-open>.tg-sum{display:none}
+.tg-all{display:flex;gap:8px;margin:4px 0 6px}
+.tg-all button{border:0;background:none;color:var(--accent);font:600 .85rem var(--font-body);cursor:pointer;padding:2px 0}
+.paper-item>.item-head,.ide-item>.item-head{cursor:pointer;margin-bottom:0;user-select:none}
+.paper-item>.item-head .tg-btn,.ide-item>.item-head .tg-btn{padding:4px 12px;font-size:.8rem}
+.paper-item.tg-open>.item-head,.ide-item.tg-open>.item-head{margin-bottom:6px}
+.paper-item,.ide-item{padding:14px 18px}
+.quick .tg-ctl{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:1.5px dashed var(--accent);background:var(--accent-soft);color:var(--ink);border-radius:12px;padding:12px 16px;font:600 .95rem var(--font-body);cursor:pointer}
+.quick .tg-ctl .chev{margin-left:auto}
+.quick.tg-open .tg-ctl{border-radius:12px 12px 0 0}
+.quick .tg-body .q{margin-top:0;border-top-left-radius:0;border-top-right-radius:0}
+@media print{.tg-body{display:block!important}.tg-btn,.tg-all,.tg-sum,.quick .tg-ctl{display:none!important}}
+</style>
+<script>
+(function(){
+  const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+  const chev='<span class="chev">▾</span>';
+  function setOpen(el,open){
+    el.classList.toggle('tg-open',open);
+    const b=el.querySelector(':scope > h2 .tg-btn, :scope > .item-head .tg-btn');
+    if(b) b.firstChild.textContent=open?(b.dataset.hide||'Hide '):(b.dataset.show||'Show ');
+  }
+  function wrapAfter(el,first){
+    const body=document.createElement('div'); body.className='tg-body';
+    let n=first.nextSibling;
+    while(n){ const nx=n.nextSibling; body.appendChild(n); n=nx; }
+    el.appendChild(body); return body;
+  }
+  // 1) Section-level: Quiz, Paper Activity, IDE Activity
+  $$('section.block').forEach(sec=>{
+    const k=sec.id.split('-').pop();
+    if(!['quiz','paper','ide'].includes(k)) return;
+    const h2=$(':scope > h2',sec); if(!h2) return;
+    let sum='';
+    if(k==='quiz'){ const n=$$('.q',sec).length; sum=`${n} multiple-choice questions with instant feedback.`; }
+    if(k==='paper'){ const n=$$('.paper-item',sec).length; sum=`${n} tracing activit${n===1?'y':'ies'} to answer on screen or on paper.`; }
+    if(k==='ide'){ const n=$$('.ide-item',sec).length; sum=`${n} coding problem${n===1?'':'s'} with hints and solutions.`; }
+    wrapAfter(sec,h2);
+    const p=document.createElement('p'); p.className='tg-sum'; p.textContent=sum; sec.insertBefore(p,$(':scope > .tg-body',sec));
+    const label=k==='quiz'?'quiz':'activities';
+    const b=document.createElement('button'); b.type='button'; b.className='tg-btn'; b.dataset.show=`Show ${label} `; b.dataset.hide=`Hide ${label} `;
+    b.innerHTML=`Show ${label} ${chev}`; h2.appendChild(b);
+    h2.style.cursor='pointer';
+    h2.addEventListener('click',()=>setOpen(sec,!sec.classList.contains('tg-open')));
+    if(k!=='quiz'){
+      const all=document.createElement('div'); all.className='tg-all no-print';
+      all.innerHTML='<button type="button" data-x="1">Expand all</button><span style="color:var(--line)">|</span><button type="button" data-x="0">Collapse all</button>';
+      const body=$(':scope > .tg-body',sec); body.insertBefore(all,body.firstChild);
+      all.addEventListener('click',e=>{const x=e.target.closest('[data-x]'); if(!x)return; $$('.paper-item,.ide-item',sec).forEach(it=>setOpen(it,x.dataset.x==='1'));});
+    }
+    setOpen(sec,false);
+  });
+  // 2) Item-level: each paper and IDE activity
+  $$('.paper-item,.ide-item').forEach(it=>{
+    const head=$(':scope > .item-head',it); if(!head) return;
+    wrapAfter(it,head);
+    const b=document.createElement('button'); b.type='button'; b.className='tg-btn'; b.dataset.show='Open '; b.dataset.hide='Close ';
+    b.innerHTML=`Open ${chev}`; head.appendChild(b);
+    head.addEventListener('click',()=>setOpen(it,!it.classList.contains('tg-open')));
+    setOpen(it,false);
+  });
+  // 3) Quick checks inside discussions
+  $$('.quick').forEach(qc=>{
+    if(!qc.children.length) return;
+    const body=document.createElement('div'); body.className='tg-body';
+    while(qc.firstChild) body.appendChild(qc.firstChild);
+    const c=document.createElement('button'); c.type='button'; c.className='tg-ctl';
+    c.innerHTML=`⚡ Quick check: test yourself ${chev}`;
+    qc.appendChild(c); qc.appendChild(body);
+    c.addEventListener('click',()=>qc.classList.toggle('tg-open'));
+  });
+  // Open a collapsed section when the side menu jumps to it
+  document.addEventListener('click',e=>{
+    const a=e.target.closest('a[href^="#"]'); if(!a) return;
+    const t=document.getElementById(a.getAttribute('href').slice(1));
+    if(t&&t.classList.contains('block')&&t.querySelector(':scope > .tg-body')) setOpen(t,true);
+  },true);
+  // Printing a worksheet: open the paper items first
+  document.addEventListener('click',e=>{
+    const b=e.target.closest('[data-print]'); if(!b) return;
+    const sec=b.closest('section.block'); if(sec){ setOpen(sec,true); $$('.paper-item',sec).forEach(it=>setOpen(it,true)); }
+  },true);
+})();
+</script>
+<!--TOGGLE-PATCH-END-->
+</body>
+</html>
